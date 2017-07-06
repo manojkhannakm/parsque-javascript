@@ -10,9 +10,5 @@ class Utils {
             throw new Error(error);
         }
     }
-    static checkType(name, object, type) {
-        Utils.check("type", type);
-        Utils.check(name, object == null || object instanceof type);
-    }
 }
 exports.default = Utils;

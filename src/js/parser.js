@@ -58,8 +58,26 @@ class Parser {
     parseValue(name, valueParser) {
         utils_1.default.check("name", name);
         utils_1.default.check("valueParser", valueParser);
+        this._output[name] = valueParser(this);
     }
-    parseValueList() {
+    parseValueList(name, valueListParser, ...indexes) {
+        utils_1.default.check("name", name);
+        utils_1.default.check("valueListParser", valueListParser);
+        let indexSet = new Set();
+        for (let index of indexes.sort()) {
+            if (index >= 0) {
+                indexSet.add(index);
+            }
+        }
+        let newValues = [];
+        let values = this._output[name];
+        if (values && Array.isArray(values)) {
+            newValues.push(values);
+        }
+        for (let index of indexSet) {
+            newValues[index] = valueListParser(this, index);
+        }
+        this._output[name] = newValues;
     }
     parseOutput() {
     }

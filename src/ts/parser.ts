@@ -29,9 +29,9 @@ export default class Parser {
     protected contentCreated(): void {
     }
 
-    public create(inputFactory?: (parser: Parser) => Input, inputCallback?: () => void,
-                  outputFactory?: (parser: Parser) => Output, outputCallback?: () => void,
-                  contentFactory?: (parser: Parser) => Content, contentCallback?: () => void): void {
+    create(inputFactory?: (parser: Parser) => Input, inputCallback?: () => void,
+           outputFactory?: (parser: Parser) => Output, outputCallback?: () => void,
+           contentFactory?: (parser: Parser) => Content, contentCallback?: () => void): void {
         if (inputFactory) {
             this._input = inputFactory(this);
         }
@@ -81,34 +81,58 @@ export default class Parser {
         }
     }
 
-    public parseValue(name: string, valueParser: (parser: Parser) => object): void {
+    parseValue(name: string, valueParser: (parser: Parser) => any): void {
         Utils.check("name", name);
         Utils.check("valueParser", valueParser);
 
+        this._output[name] = valueParser(this);
+    }
+
+    parseValueList(name: string,
+                   valueListParser: (parser: Parser, index: number) => any, ...indexes: number[]): void {
+        Utils.check("name", name);
+        Utils.check("valueListParser", valueListParser);
+
+        let indexSet = new Set<number>();
+
+        for (let index of indexes.sort()) {
+            if (index >= 0) {
+                indexSet.add(index);
+            }
+        }
+
+        let newValues = [];
+
+        let values = this._output[name];
+
+        if (values && Array.isArray(values)) {
+            newValues.push(values);
+        }
+
+        for (let index of indexSet) {
+            newValues[index] = valueListParser(this, index);
+        }
+
+        this._output[name] = newValues;
+    }
+
+    parseOutput(): void {
 
     }
 
-    public parseValueList(): void {
+    parseOutputList(): void {
 
     }
 
-    public parseOutput(): void {
-
-    }
-
-    public parseOutputList(): void {
-
-    }
-
-    public get input(): Input {
+    get input(): Input {
         return this._input;
     }
 
-    public get output(): Output {
+    get output(): Output {
         return this._output;
     }
 
-    public get content(): Content {
+    get content(): Content {
         return this._content;
     }
 }
