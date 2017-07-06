@@ -1,7 +1,7 @@
-import {Content, Input, Output, Parser, ParserBuilder} from "./parsque";
+import {Content, Input, Output, Parser, ParserBuilder} from "";
 import fs = require("fs");
 
-const FILES_PATH = "./example_files/";
+const FILES_PATH = "./files/";
 const FILE_1_PATH = FILES_PATH + "file_1.txt";
 const FILE_2_PATH = FILES_PATH + "file_2.txt";
 const FILE_3_PATH = FILES_PATH + "file_3.txt";
