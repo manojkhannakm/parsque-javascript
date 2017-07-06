@@ -29,9 +29,12 @@ export default class Parser {
     protected contentCreated(): void {
     }
 
-    create(inputFactory?: (parser: Parser) => Input, inputCallback?: () => void,
-           outputFactory?: (parser: Parser) => Output, outputCallback?: () => void,
-           contentFactory?: (parser: Parser) => Content, contentCallback?: () => void): void {
+    create(inputFactory?: (parser: Parser) => Input,
+           inputCallback?: () => void,
+           outputFactory?: (parser: Parser) => Output,
+           outputCallback?: () => void,
+           contentFactory?: (parser: Parser) => Content,
+           contentCallback?: () => void): void {
         if (inputFactory) {
             this._input = inputFactory(this);
         }
@@ -88,10 +91,11 @@ export default class Parser {
         this._output[name] = valueParser(this);
     }
 
-    parseValueList(name: string,
-                   valueListParser: (parser: Parser, index: number) => any, ...indexes: number[]): void {
+    parseValues(name: string,
+                valuesParser: (parser: Parser, index: number) => any,
+                ...indexes: number[]): void {
         Utils.check("name", name);
-        Utils.check("valueListParser", valueListParser);
+        Utils.check("valuesParser", valuesParser);
 
         let indexSet = new Set<number>();
 
@@ -110,18 +114,103 @@ export default class Parser {
         }
 
         for (let index of indexSet) {
-            newValues[index] = valueListParser(this, index);
+            newValues[index] = valuesParser(this, index);
         }
 
         this._output[name] = newValues;
     }
 
-    parseOutput(): void {
+    parseOutput(name: string,
+                parserFactory: () => Parser,
+                outputParser: (parser: Parser) => void): void {
+        Utils.check("name", name);
+        Utils.check("parserFactory", parserFactory);
+        Utils.check("outputParser", outputParser);
 
+        let parser = parserFactory();
+
+        Utils.check("parserFactory", parser);
+
+        parser.create(parser => this._input[name], null,
+            parser => this._output[name], null,
+            parser => this._content[name], null);
+
+        outputParser(parser);
+
+        this._output[name] = parser._output;
     }
 
-    parseOutputList(): void {
+    parseOutputs(name: string,
+                 parserFactory: () => Parser,
+                 outputsParser: (parser: Parser, index: number) => void,
+                 ...indexes: number[]): void {
+        Utils.check("name", name);
+        Utils.check("parserFactory", parserFactory);
+        Utils.check("outputsParser", outputsParser);
 
+        let inputs = this._input[name];
+
+        let inputSize = 0;
+
+        if (inputs && Array.isArray(inputs)) {
+            inputSize = inputs.length;
+        }
+
+        let indexSet = new Set<number>();
+
+        for (let index of indexes.sort()) {
+            if (index >= 0 && (inputSize == 0 || index < inputSize)) {
+                indexSet.add(index);
+            }
+        }
+
+        if (indexSet.size == 0) {
+            for (let i = 0; i < inputSize; i++) {
+                indexSet.add(i);
+            }
+        }
+
+        let newOutputs = [];
+
+        let outputs = this._output[name];
+
+        if (outputs && Array.isArray(outputs)) {
+            newOutputs.push(outputs);
+        }
+
+        let contents = this._content[name];
+
+        for (let index of indexSet) {
+            let parser = parserFactory();
+
+            Utils.check("parserFactory", parser);
+
+            parser.create(() => {
+                if (inputs && Array.isArray(inputs) && index < inputs.length) {
+                    return inputs[index];
+                }
+
+                return null;
+            }, null, () => {
+                if (outputs && Array.isArray(outputs) && index < outputs.length) {
+                    return outputs[index];
+                }
+
+                return null;
+            }, null, () => {
+                if (contents && Array.isArray(contents) && index < contents.length) {
+                    return contents[index];
+                }
+
+                return null;
+            }, null);
+
+            outputsParser(parser, index);
+
+            newOutputs[index] = parser._output;
+        }
+
+        this._output[name] = newOutputs;
     }
 
     get input(): Input {
