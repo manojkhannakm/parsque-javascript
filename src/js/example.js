@@ -1,4 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const parsque_1 = require("./parsque");
-console.log(new parsque_1.Input());
+const parser_1 = require("./parser");
+let parser = new parser_1.default();
+parser.create();
+parser.parseValue("a", null);

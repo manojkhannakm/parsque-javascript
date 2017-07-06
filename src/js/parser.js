@@ -1,19 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const parsque_1 = require("./parsque");
+const input_1 = require("./input");
+const output_1 = require("./output");
+const content_1 = require("./content");
+const utils_1 = require("./utils");
 class Parser {
     createInput() {
-        return new parsque_1.Input();
+        return new input_1.default();
     }
     inputCreated() {
     }
     createOutput() {
-        return new parsque_1.Output();
+        return new output_1.default();
     }
     outputCreated() {
     }
     createContent() {
-        return new parsque_1.Content;
+        return new content_1.default;
     }
     contentCreated() {
     }
@@ -22,9 +25,46 @@ class Parser {
             this._input = inputFactory(this);
         }
         if (!this._input) {
+            this._input = this.createInput();
+        }
+        utils_1.default.check("inputFactory", this._input);
+        this.inputCreated();
+        if (inputCallback) {
+            inputCallback();
+        }
+        if (outputFactory) {
+            this._output = outputFactory(this);
+        }
+        if (!this._output) {
+            this._output = this.createOutput();
+        }
+        utils_1.default.check("outputFactory", this._output);
+        this.outputCreated();
+        if (outputCallback) {
+            outputCallback();
+        }
+        if (contentFactory) {
+            this._content = contentFactory(this);
+        }
+        if (!this._content) {
+            this._content = this.createContent();
+        }
+        utils_1.default.check("contentFactory", this._content);
+        this.contentCreated();
+        if (contentCallback) {
+            contentCallback();
         }
     }
-    //
+    parseValue(name, valueParser) {
+        utils_1.default.check("name", name);
+        utils_1.default.check("valueParser", valueParser);
+    }
+    parseValueList() {
+    }
+    parseOutput() {
+    }
+    parseOutputList() {
+    }
     get input() {
         return this._input;
     }

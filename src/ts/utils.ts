@@ -1,5 +1,5 @@
 export default class Utils {
-    public static check(name: string, condition: boolean): void {
+    public static check(name: string, condition: any): void {
         let error: string = "";
 
         if (name) {
@@ -11,12 +11,8 @@ export default class Utils {
         }
     }
 
-    public static checkNull(name: string, object: any): void {
-        Utils.check(name, object != null);
-    }
-
     public static checkType(name: string, object: any, type: Function): void {
-        Utils.checkNull("type", type);
+        Utils.check("type", type);
 
         Utils.check(name, object == null || object instanceof type);
     }

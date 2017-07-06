@@ -1,3 +1,5 @@
-import {Parser, Input, Output, Content, Utils} from './parsque';
+import Parser from "./parser";
 
-console.log(new Input());
+let parser = new Parser();
+parser.create();
+parser.parseValue("a", null);

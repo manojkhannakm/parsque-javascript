@@ -1,5 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-class Input {
+class ParserBuilder {
 }
-exports.default = Input;
+exports.default = ParserBuilder;

@@ -10,11 +10,8 @@ class Utils {
             throw new Error(error);
         }
     }
-    static checkNull(name, object) {
-        Utils.check(name, object != null);
-    }
     static checkType(name, object, type) {
-        Utils.checkNull("type", type);
+        Utils.check("type", type);
         Utils.check(name, object == null || object instanceof type);
     }
 }
