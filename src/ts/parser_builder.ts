@@ -5,13 +5,13 @@ import Content from "./content";
 import Utils from "./utils";
 
 export default class ParserBuilder {
-    private inputFactory: (parser: Parser) => Input = parser => new Input();
+    private inputFactory: (parser: Parser) => Input = parser => null;
     private inputCallback: () => void = () => {
     };
-    private outputFactory: (parser: Parser) => Output = parser => new Output();
+    private outputFactory: (parser: Parser) => Output = parser => null;
     private outputCallback: () => void = () => {
     };
-    private contentFactory: (parser: Parser) => Content = parser => new Content();
+    private contentFactory: (parser: Parser) => Content = parser => null;
     private contentCallback: () => void = () => {
     };
 
@@ -19,7 +19,7 @@ export default class ParserBuilder {
         Utils.check("parserFactory", parserFactory);
     }
 
-    setInputFactory(inputFactory: (parser: Parser) => Input): ParserBuilder {
+    withInputFactory(inputFactory: (parser: Parser) => Input): ParserBuilder {
         Utils.check("inputFactory", inputFactory);
 
         this.inputFactory = inputFactory;
@@ -27,7 +27,7 @@ export default class ParserBuilder {
         return this;
     }
 
-    setInputCallback(inputCallback: () => void): ParserBuilder {
+    withInputCallback(inputCallback: () => void): ParserBuilder {
         Utils.check("inputCallback", inputCallback);
 
         this.inputCallback = inputCallback;
@@ -35,7 +35,7 @@ export default class ParserBuilder {
         return this;
     }
 
-    setOutputFactory(outputFactory: (parser: Parser) => Output): ParserBuilder {
+    withOutputFactory(outputFactory: (parser: Parser) => Output): ParserBuilder {
         Utils.check("outputFactory", outputFactory);
 
         this.outputFactory = outputFactory;
@@ -43,7 +43,7 @@ export default class ParserBuilder {
         return this;
     }
 
-    setOutputCallback(outputCallback: () => void): ParserBuilder {
+    withOutputCallback(outputCallback: () => void): ParserBuilder {
         Utils.check("outputCallback", outputCallback);
 
         this.outputCallback = outputCallback;
@@ -51,7 +51,7 @@ export default class ParserBuilder {
         return this;
     }
 
-    setContentFactory(contentFactory: (parser: Parser) => Content): ParserBuilder {
+    withContentFactory(contentFactory: (parser: Parser) => Content): ParserBuilder {
         Utils.check("contentFactory", contentFactory);
 
         this.contentFactory = contentFactory;
@@ -59,7 +59,7 @@ export default class ParserBuilder {
         return this;
     }
 
-    setContentCallback(contentCallback: () => void): ParserBuilder {
+    withContentCallback(contentCallback: () => void): ParserBuilder {
         Utils.check("contentCallback", contentCallback);
 
         this.contentCallback = contentCallback;

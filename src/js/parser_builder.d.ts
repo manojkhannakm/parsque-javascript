@@ -11,11 +11,11 @@ export default class ParserBuilder {
     private contentFactory;
     private contentCallback;
     constructor(parserFactory?: () => Parser);
-    setInputFactory(inputFactory: (parser: Parser) => Input): ParserBuilder;
-    setInputCallback(inputCallback: () => void): ParserBuilder;
-    setOutputFactory(outputFactory: (parser: Parser) => Output): ParserBuilder;
-    setOutputCallback(outputCallback: () => void): ParserBuilder;
-    setContentFactory(contentFactory: (parser: Parser) => Content): ParserBuilder;
-    setContentCallback(contentCallback: () => void): ParserBuilder;
+    withInputFactory(inputFactory: (parser: Parser) => Input): ParserBuilder;
+    withInputCallback(inputCallback: () => void): ParserBuilder;
+    withOutputFactory(outputFactory: (parser: Parser) => Output): ParserBuilder;
+    withOutputCallback(outputCallback: () => void): ParserBuilder;
+    withContentFactory(contentFactory: (parser: Parser) => Content): ParserBuilder;
+    withContentCallback(contentCallback: () => void): ParserBuilder;
     build(): Parser;
 }

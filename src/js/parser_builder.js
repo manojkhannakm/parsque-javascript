@@ -1,50 +1,47 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const parser_1 = require("./parser");
-const input_1 = require("./input");
-const output_1 = require("./output");
-const content_1 = require("./content");
 const utils_1 = require("./utils");
 class ParserBuilder {
     constructor(parserFactory = () => new parser_1.default()) {
         this.parserFactory = parserFactory;
-        this.inputFactory = parser => new input_1.default();
+        this.inputFactory = parser => null;
         this.inputCallback = () => {
         };
-        this.outputFactory = parser => new output_1.default();
+        this.outputFactory = parser => null;
         this.outputCallback = () => {
         };
-        this.contentFactory = parser => new content_1.default();
+        this.contentFactory = parser => null;
         this.contentCallback = () => {
         };
         utils_1.default.check("parserFactory", parserFactory);
     }
-    setInputFactory(inputFactory) {
+    withInputFactory(inputFactory) {
         utils_1.default.check("inputFactory", inputFactory);
         this.inputFactory = inputFactory;
         return this;
     }
-    setInputCallback(inputCallback) {
+    withInputCallback(inputCallback) {
         utils_1.default.check("inputCallback", inputCallback);
         this.inputCallback = inputCallback;
         return this;
     }
-    setOutputFactory(outputFactory) {
+    withOutputFactory(outputFactory) {
         utils_1.default.check("outputFactory", outputFactory);
         this.outputFactory = outputFactory;
         return this;
     }
-    setOutputCallback(outputCallback) {
+    withOutputCallback(outputCallback) {
         utils_1.default.check("outputCallback", outputCallback);
         this.outputCallback = outputCallback;
         return this;
     }
-    setContentFactory(contentFactory) {
+    withContentFactory(contentFactory) {
         utils_1.default.check("contentFactory", contentFactory);
         this.contentFactory = contentFactory;
         return this;
     }
-    setContentCallback(contentCallback) {
+    withContentCallback(contentCallback) {
         utils_1.default.check("contentCallback", contentCallback);
         this.contentCallback = contentCallback;
         return this;
