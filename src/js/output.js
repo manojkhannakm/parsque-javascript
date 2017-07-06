@@ -1,11 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const entity_1 = require("./entity");
-class Content extends entity_1.default {
+class Output extends entity_1.default {
     constructor() {
         super();
-        console.log("content");
+        console.log("output");
     }
 }
-exports.default = Content;
-//# sourceMappingURL=content.js.map
+exports.default = Output;
