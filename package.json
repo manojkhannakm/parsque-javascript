@@ -2,6 +2,7 @@
   "name": "parsque",
   "version": "1.0.0",
   "main": "./src/js/parsque.js",
+  "types": "./src/js/parsque.d.ts",
   "license": "MIT",
   "devDependencies": {
     "del": "^3.0.0",
