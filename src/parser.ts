@@ -2,82 +2,88 @@ import Input from "./input";
 import Output from "./output";
 import Content from "./content";
 
-export default class Parser<I extends Input, O extends Output, C extends Content> {
-    input: I;
-    output: O;
-    content: C;
+export default class Parser {
+    private _input: Input;
+    private _output: Output;
+    private _content: Content;
 
-    protected createInput(): I {
-        return new Input() as I;
+    protected createInput(): Input {
+        return new Input();
     }
 
     protected inputCreated(): void {
     }
 
-    protected createOutput(): O {
-        return new Output() as O;
+    protected createOutput(): Output {
+        return new Output();
     }
 
     protected outputCreated(): void {
     }
 
-    protected createContent(): C {
-        return new Content as C;
+    protected createContent(): Content {
+        return new Content();
     }
 
     protected contentCreated(): void {
     }
 
-    create(inputFactory?: (parser: Parser<I, O, C>) => I,
-           inputCallback?: () => void,
-           outputFactory?: (parser: Parser<I, O, C>) => O,
-           outputCallback?: () => void,
-           contentFactory?: (parser: Parser<I, O, C>) => C,
-           contentCallback?: () => void): void {
+    create(inputFactory?: (parser: Parser) => Input,
+           inputCallback?: (parser: Parser) => void,
+           outputFactory?: (parser: Parser) => Output,
+           outputCallback?: (parser: Parser) => void,
+           contentFactory?: (parser: Parser) => Content,
+           contentCallback?: (parser: Parser) => void): void {
         if (inputFactory) {
-            this.input = inputFactory(this);
-        } else {
-            this.input = this.createInput();
+            this._input = inputFactory(this);
+        }
+
+        if (!this._input) {
+            this._input = this.createInput();
         }
 
         this.inputCreated();
 
         if (inputCallback) {
-            inputCallback();
+            inputCallback(this);
         }
 
         if (outputFactory) {
-            this.output = outputFactory(this);
-        } else {
-            this.output = this.createOutput();
+            this._output = outputFactory(this);
+        }
+
+        if (!this._output) {
+            this._output = this.createOutput();
         }
 
         this.outputCreated();
 
         if (outputCallback) {
-            outputCallback();
+            outputCallback(this);
         }
 
         if (contentFactory) {
-            this.content = contentFactory(this);
-        } else {
-            this.content = this.createContent();
+            this._content = contentFactory(this);
+        }
+
+        if (!this._content) {
+            this._content = this.createContent();
         }
 
         this.contentCreated();
 
         if (contentCallback) {
-            contentCallback();
+            contentCallback(this);
         }
     }
 
     parseValue(valueName: string,
-               valueParser: (parser: Parser<I, O, C>) => any): void {
-        this.output[valueName] = valueParser(this);
+               valueParser: (parser: Parser) => any): void {
+        this._output[valueName] = valueParser(this);
     }
 
     parseValues(valuesName: string,
-                valuesParser: (parser: Parser<I, O, C>, index: number) => any,
+                valuesParser: (parser: Parser, index: number) => any,
                 ...indexes: number[]): void {
         let indexSet = new Set<number>();
 
@@ -89,7 +95,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let newValues: any[] = [];
 
-        let values = this.output[valuesName];
+        let values = this._output[valuesName];
 
         if (values && Array.isArray(values)) {
             newValues.push(values);
@@ -99,28 +105,28 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             newValues[index] = valuesParser(this, index);
         }
 
-        this.output[valuesName] = newValues;
+        this._output[valuesName] = newValues;
     }
 
     parseOutput(outputName: string,
-                parserFactory: () => Parser<I, O, C>,
-                outputParser: (parser: Parser<I, O, C>) => void): void {
+                parserFactory: () => Parser,
+                outputParser: (parser: Parser) => void): void {
         let parser = parserFactory();
 
-        parser.create(parser => this.input[outputName], undefined,
-            parser => this.output[outputName], undefined,
-            parser => this.content[outputName], undefined);
+        parser.create(() => this._input[outputName], undefined,
+            () => this._output[outputName], undefined,
+            () => this._content[outputName], undefined);
 
         outputParser(parser);
 
-        this.output[outputName] = parser.output;
+        this._output[outputName] = parser._output;
     }
 
     parseOutputs(outputsName: string,
-                 parserFactory: () => Parser<I, O, C>,
-                 outputsParser: (parser: Parser<I, O, C>, index: number) => void,
+                 parserFactory: () => Parser,
+                 outputsParser: (parser: Parser, index: number) => void,
                  ...indexes: number[]): void {
-        let inputs = this.input[outputsName];
+        let inputs = this._input[outputsName];
 
         let inputSize = 0;
 
@@ -144,13 +150,13 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let newOutputs: Output[] = [];
 
-        let outputs = this.output[outputsName];
+        let outputs = this._output[outputsName];
 
         if (outputs && Array.isArray(outputs)) {
             newOutputs.push(outputs);
         }
 
-        let contents = this.content[outputsName];
+        let contents = this._content[outputsName];
 
         for (let index of indexSet) {
             let parser = parserFactory();
@@ -171,9 +177,21 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
             outputsParser(parser, index);
 
-            newOutputs[index] = parser.output;
+            newOutputs[index] = parser._output;
         }
 
-        this.output[outputsName] = newOutputs;
+        this._output[outputsName] = newOutputs;
+    }
+
+    get input(): Input {
+        return this._input;
+    }
+
+    get output(): Output {
+        return this._output;
+    }
+
+    get content(): Content {
+        return this._content;
     }
 }

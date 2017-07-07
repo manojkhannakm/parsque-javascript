@@ -3,55 +3,54 @@ import Input from "./input";
 import Output from "./output";
 import Content from "./content";
 
-export default class ParserBuilder<P extends Parser<I, O, C>,
-    I extends Input, O extends Output, C extends Content> {
-    private inputFactory: (parser: P) => I;
-    private inputCallback: () => void;
-    private outputFactory: (parser: P) => O;
-    private outputCallback: () => void;
-    private contentFactory: (parser: P) => C;
-    private contentCallback: () => void;
+export default class ParserBuilder {
+    private inputFactory: (parser: Parser) => Input;
+    private inputCallback: (parser: Parser) => void;
+    private outputFactory: (parser: Parser) => Output;
+    private outputCallback: (parser: Parser) => void;
+    private contentFactory: (parser: Parser) => Content;
+    private contentCallback: (parser: Parser) => void;
 
-    constructor(private parserFactory: () => P = () => new Parser() as P) {
+    constructor(private parserFactory: () => Parser = () => new Parser()) {
     }
 
-    withInputFactory(inputFactory: (parser: P) => I): ParserBuilder<P, I, O, C> {
+    withInputFactory(inputFactory: (parser: Parser) => Input): ParserBuilder {
         this.inputFactory = inputFactory;
 
         return this;
     }
 
-    withInputCallback(inputCallback: () => void): ParserBuilder<P, I, O, C> {
+    withInputCallback(inputCallback: (parser: Parser) => void): ParserBuilder {
         this.inputCallback = inputCallback;
 
         return this;
     }
 
-    withOutputFactory(outputFactory: (parser: P) => O): ParserBuilder<P, I, O, C> {
+    withOutputFactory(outputFactory: (parser: Parser) => Output): ParserBuilder {
         this.outputFactory = outputFactory;
 
         return this;
     }
 
-    withOutputCallback(outputCallback: () => void): ParserBuilder<P, I, O, C> {
+    withOutputCallback(outputCallback: (parser: Parser) => void): ParserBuilder {
         this.outputCallback = outputCallback;
 
         return this;
     }
 
-    withContentFactory(contentFactory: (parser: P) => C): ParserBuilder<P, I, O, C> {
+    withContentFactory(contentFactory: (parser: Parser) => Content): ParserBuilder {
         this.contentFactory = contentFactory;
 
         return this;
     }
 
-    withContentCallback(contentCallback: () => void): ParserBuilder<P, I, O, C> {
+    withContentCallback(contentCallback: (parser: Parser) => void): ParserBuilder {
         this.contentCallback = contentCallback;
 
         return this;
     }
 
-    build(): P {
+    build(): Parser {
         let parser = this.parserFactory();
 
         parser.create(this.inputFactory, this.inputCallback,

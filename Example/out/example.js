@@ -15,23 +15,24 @@ class FileContent extends parsque_1.Content {
 class FileParser extends parsque_1.Parser {
     inputCreated() {
         super.inputCreated();
-        let input = new FileInput();
-        input.path = FILE_2_PATH;
-        this.input.file = input;
-        let inputs = [];
+        let input = this.input;
+        let childInput = new FileInput();
+        childInput.path = FILE_2_PATH;
+        input.file = childInput;
+        let childInputs = [];
         for (let path of [FILE_1_PATH, FILE_2_PATH, FILE_3_PATH]) {
-            let input = new FileInput();
-            input.path = path;
-            inputs.push(input);
+            let childInput = new FileInput();
+            childInput.path = path;
+            childInputs.push(childInput);
         }
-        this.input.files = inputs;
+        input.files = childInputs;
     }
     createOutput() {
         return new FileOutput();
     }
     createContent() {
         let content = new FileContent();
-        content.lines = fs.readFileSync(this.input.path, 'utf-8').split(/\s+/);
+        content.lines = fs.readFileSync(this.input.path, "utf-8").split(/\s+/);
         return content;
     }
     parseLine1() {
@@ -60,15 +61,15 @@ let parser = new parsque_1.ParserBuilder(() => new FileParser())
 parser.parseLine1();
 parser.parseLine2();
 parser.parseLine3();
-parser.parseFile(parser => {
-    parser.parseLine1();
-    parser.parseLine2();
-    parser.parseLine3();
+parser.parseFile(childParser => {
+    childParser.parseLine1();
+    childParser.parseLine2();
+    childParser.parseLine3();
 });
-parser.parseFiles((parser) => {
-    parser.parseLine1();
-    parser.parseLine2();
-    parser.parseLine3();
+parser.parseFiles(childParser => {
+    childParser.parseLine1();
+    childParser.parseLine2();
+    childParser.parseLine3();
 }, 0, 2);
 console.log(JSON.stringify(parser.output, null, 2));
 //# sourceMappingURL=example.js.map

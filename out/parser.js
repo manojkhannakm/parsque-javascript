@@ -15,44 +15,44 @@ class Parser {
     outputCreated() {
     }
     createContent() {
-        return new content_1.default;
+        return new content_1.default();
     }
     contentCreated() {
     }
     create(inputFactory, inputCallback, outputFactory, outputCallback, contentFactory, contentCallback) {
         if (inputFactory) {
-            this.input = inputFactory(this);
+            this._input = inputFactory(this);
         }
-        else {
-            this.input = this.createInput();
+        if (!this._input) {
+            this._input = this.createInput();
         }
         this.inputCreated();
         if (inputCallback) {
-            inputCallback();
+            inputCallback(this);
         }
         if (outputFactory) {
-            this.output = outputFactory(this);
+            this._output = outputFactory(this);
         }
-        else {
-            this.output = this.createOutput();
+        if (!this._output) {
+            this._output = this.createOutput();
         }
         this.outputCreated();
         if (outputCallback) {
-            outputCallback();
+            outputCallback(this);
         }
         if (contentFactory) {
-            this.content = contentFactory(this);
+            this._content = contentFactory(this);
         }
-        else {
-            this.content = this.createContent();
+        if (!this._content) {
+            this._content = this.createContent();
         }
         this.contentCreated();
         if (contentCallback) {
-            contentCallback();
+            contentCallback(this);
         }
     }
     parseValue(valueName, valueParser) {
-        this.output[valueName] = valueParser(this);
+        this._output[valueName] = valueParser(this);
     }
     parseValues(valuesName, valuesParser, ...indexes) {
         let indexSet = new Set();
@@ -62,23 +62,23 @@ class Parser {
             }
         }
         let newValues = [];
-        let values = this.output[valuesName];
+        let values = this._output[valuesName];
         if (values && Array.isArray(values)) {
             newValues.push(values);
         }
         for (let index of indexSet) {
             newValues[index] = valuesParser(this, index);
         }
-        this.output[valuesName] = newValues;
+        this._output[valuesName] = newValues;
     }
     parseOutput(outputName, parserFactory, outputParser) {
         let parser = parserFactory();
-        parser.create(parser => this.input[outputName], undefined, parser => this.output[outputName], undefined, parser => this.content[outputName], undefined);
+        parser.create(() => this._input[outputName], undefined, () => this._output[outputName], undefined, () => this._content[outputName], undefined);
         outputParser(parser);
-        this.output[outputName] = parser.output;
+        this._output[outputName] = parser._output;
     }
     parseOutputs(outputsName, parserFactory, outputsParser, ...indexes) {
-        let inputs = this.input[outputsName];
+        let inputs = this._input[outputsName];
         let inputSize = 0;
         if (inputs && Array.isArray(inputs)) {
             inputSize = inputs.length;
@@ -95,11 +95,11 @@ class Parser {
             }
         }
         let newOutputs = [];
-        let outputs = this.output[outputsName];
+        let outputs = this._output[outputsName];
         if (outputs && Array.isArray(outputs)) {
             newOutputs.push(outputs);
         }
-        let contents = this.content[outputsName];
+        let contents = this._content[outputsName];
         for (let index of indexSet) {
             let parser = parserFactory();
             parser.create(() => {
@@ -116,9 +116,18 @@ class Parser {
                 }
             }, undefined);
             outputsParser(parser, index);
-            newOutputs[index] = parser.output;
+            newOutputs[index] = parser._output;
         }
-        this.output[outputsName] = newOutputs;
+        this._output[outputsName] = newOutputs;
+    }
+    get input() {
+        return this._input;
+    }
+    get output() {
+        return this._output;
+    }
+    get content() {
+        return this._content;
     }
 }
 exports.default = Parser;

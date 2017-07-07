@@ -1,19 +1,22 @@
 import Input from "./input";
 import Output from "./output";
 import Content from "./content";
-export default class Parser<I extends Input, O extends Output, C extends Content> {
-    input: I;
-    output: O;
-    content: C;
-    protected createInput(): I;
+export default class Parser {
+    private _input;
+    private _output;
+    private _content;
+    protected createInput(): Input;
     protected inputCreated(): void;
-    protected createOutput(): O;
+    protected createOutput(): Output;
     protected outputCreated(): void;
-    protected createContent(): C;
+    protected createContent(): Content;
     protected contentCreated(): void;
-    create(inputFactory?: (parser: Parser<I, O, C>) => I, inputCallback?: () => void, outputFactory?: (parser: Parser<I, O, C>) => O, outputCallback?: () => void, contentFactory?: (parser: Parser<I, O, C>) => C, contentCallback?: () => void): void;
-    parseValue(valueName: string, valueParser: (parser: Parser<I, O, C>) => any): void;
-    parseValues(valuesName: string, valuesParser: (parser: Parser<I, O, C>, index: number) => any, ...indexes: number[]): void;
-    parseOutput(outputName: string, parserFactory: () => Parser<I, O, C>, outputParser: (parser: Parser<I, O, C>) => void): void;
-    parseOutputs(outputsName: string, parserFactory: () => Parser<I, O, C>, outputsParser: (parser: Parser<I, O, C>, index: number) => void, ...indexes: number[]): void;
+    create(inputFactory?: (parser: Parser) => Input, inputCallback?: (parser: Parser) => void, outputFactory?: (parser: Parser) => Output, outputCallback?: (parser: Parser) => void, contentFactory?: (parser: Parser) => Content, contentCallback?: (parser: Parser) => void): void;
+    parseValue(valueName: string, valueParser: (parser: Parser) => any): void;
+    parseValues(valuesName: string, valuesParser: (parser: Parser, index: number) => any, ...indexes: number[]): void;
+    parseOutput(outputName: string, parserFactory: () => Parser, outputParser: (parser: Parser) => void): void;
+    parseOutputs(outputsName: string, parserFactory: () => Parser, outputsParser: (parser: Parser, index: number) => void, ...indexes: number[]): void;
+    readonly input: Input;
+    readonly output: Output;
+    readonly content: Content;
 }
