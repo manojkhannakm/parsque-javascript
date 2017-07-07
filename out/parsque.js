@@ -10,6 +10,4 @@ const output_1 = require("./output");
 exports.Output = output_1.default;
 const content_1 = require("./content");
 exports.Content = content_1.default;
-const utils_1 = require("./utils");
-exports.Utils = utils_1.default;
 //# sourceMappingURL=parsque.js.map

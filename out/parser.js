@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const input_1 = require("./input");
 const output_1 = require("./output");
 const content_1 = require("./content");
-const utils_1 = require("./utils");
 class Parser {
     createInput() {
         return new input_1.default();
@@ -22,47 +21,40 @@ class Parser {
     }
     create(inputFactory, inputCallback, outputFactory, outputCallback, contentFactory, contentCallback) {
         if (inputFactory) {
-            this._input = inputFactory(this);
+            this.input = inputFactory(this);
         }
-        if (!this._input) {
-            this._input = this.createInput();
+        else {
+            this.input = this.createInput();
         }
-        utils_1.default.check("inputFactory", this._input);
         this.inputCreated();
         if (inputCallback) {
             inputCallback();
         }
         if (outputFactory) {
-            this._output = outputFactory(this);
+            this.output = outputFactory(this);
         }
-        if (!this._output) {
-            this._output = this.createOutput();
+        else {
+            this.output = this.createOutput();
         }
-        utils_1.default.check("outputFactory", this._output);
         this.outputCreated();
         if (outputCallback) {
             outputCallback();
         }
         if (contentFactory) {
-            this._content = contentFactory(this);
+            this.content = contentFactory(this);
         }
-        if (!this._content) {
-            this._content = this.createContent();
+        else {
+            this.content = this.createContent();
         }
-        utils_1.default.check("contentFactory", this._content);
         this.contentCreated();
         if (contentCallback) {
             contentCallback();
         }
     }
-    parseValue(name, valueParser) {
-        utils_1.default.check("name", name);
-        utils_1.default.check("valueParser", valueParser);
-        this._output[name] = valueParser(this);
+    parseValue(valueName, valueParser) {
+        this.output[valueName] = valueParser(this);
     }
-    parseValues(name, valuesParser, ...indexes) {
-        utils_1.default.check("name", name);
-        utils_1.default.check("valuesParser", valuesParser);
+    parseValues(valuesName, valuesParser, ...indexes) {
         let indexSet = new Set();
         for (let index of indexes.sort()) {
             if (index >= 0) {
@@ -70,30 +62,23 @@ class Parser {
             }
         }
         let newValues = [];
-        let values = this._output[name];
+        let values = this.output[valuesName];
         if (values && Array.isArray(values)) {
             newValues.push(values);
         }
         for (let index of indexSet) {
             newValues[index] = valuesParser(this, index);
         }
-        this._output[name] = newValues;
+        this.output[valuesName] = newValues;
     }
-    parseOutput(name, parserFactory, outputParser) {
-        utils_1.default.check("name", name);
-        utils_1.default.check("parserFactory", parserFactory);
-        utils_1.default.check("outputParser", outputParser);
+    parseOutput(outputName, parserFactory, outputParser) {
         let parser = parserFactory();
-        utils_1.default.check("parserFactory", parser);
-        parser.create(parser => this._input[name], null, parser => this._output[name], null, parser => this._content[name], null);
+        parser.create(parser => this.input[outputName], undefined, parser => this.output[outputName], undefined, parser => this.content[outputName], undefined);
         outputParser(parser);
-        this._output[name] = parser._output;
+        this.output[outputName] = parser.output;
     }
-    parseOutputs(name, parserFactory, outputsParser, ...indexes) {
-        utils_1.default.check("name", name);
-        utils_1.default.check("parserFactory", parserFactory);
-        utils_1.default.check("outputsParser", outputsParser);
-        let inputs = this._input[name];
+    parseOutputs(outputsName, parserFactory, outputsParser, ...indexes) {
+        let inputs = this.input[outputsName];
         let inputSize = 0;
         if (inputs && Array.isArray(inputs)) {
             inputSize = inputs.length;
@@ -110,43 +95,30 @@ class Parser {
             }
         }
         let newOutputs = [];
-        let outputs = this._output[name];
+        let outputs = this.output[outputsName];
         if (outputs && Array.isArray(outputs)) {
             newOutputs.push(outputs);
         }
-        let contents = this._content[name];
+        let contents = this.content[outputsName];
         for (let index of indexSet) {
             let parser = parserFactory();
-            utils_1.default.check("parserFactory", parser);
             parser.create(() => {
                 if (inputs && Array.isArray(inputs) && index < inputs.length) {
                     return inputs[index];
                 }
-                return null;
-            }, null, () => {
+            }, undefined, () => {
                 if (outputs && Array.isArray(outputs) && index < outputs.length) {
                     return outputs[index];
                 }
-                return null;
-            }, null, () => {
+            }, undefined, () => {
                 if (contents && Array.isArray(contents) && index < contents.length) {
                     return contents[index];
                 }
-                return null;
-            }, null);
+            }, undefined);
             outputsParser(parser, index);
-            newOutputs[index] = parser._output;
+            newOutputs[index] = parser.output;
         }
-        this._output[name] = newOutputs;
-    }
-    get input() {
-        return this._input;
-    }
-    get output() {
-        return this._output;
-    }
-    get content() {
-        return this._content;
+        this.output[outputsName] = newOutputs;
     }
 }
 exports.default = Parser;

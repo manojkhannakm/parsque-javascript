@@ -15,17 +15,16 @@ class FileContent extends parsque_1.Content {
 class FileParser extends parsque_1.Parser {
     inputCreated() {
         super.inputCreated();
-        let input = this.input;
-        let input1 = new FileInput();
-        input1.path = FILE_2_PATH;
-        input.file = input1;
+        let input = new FileInput();
+        input.path = FILE_2_PATH;
+        this.input.file = input;
         let inputs = [];
         for (let path of [FILE_1_PATH, FILE_2_PATH, FILE_3_PATH]) {
-            let input2 = new FileInput();
-            input2.path = path;
-            inputs.push(input2);
+            let input = new FileInput();
+            input.path = path;
+            inputs.push(input);
         }
-        input.files = inputs;
+        this.input.files = inputs;
     }
     createOutput() {
         return new FileOutput();
@@ -62,16 +61,14 @@ parser.parseLine1();
 parser.parseLine2();
 parser.parseLine3();
 parser.parseFile(parser => {
-    let childParser = parser;
-    childParser.parseLine1();
-    childParser.parseLine2();
-    childParser.parseLine3();
+    parser.parseLine1();
+    parser.parseLine2();
+    parser.parseLine3();
 });
 parser.parseFiles((parser) => {
-    let childParser = parser;
-    childParser.parseLine1();
-    childParser.parseLine2();
-    childParser.parseLine3();
+    parser.parseLine1();
+    parser.parseLine2();
+    parser.parseLine3();
 }, 0, 2);
 console.log(JSON.stringify(parser.output, null, 2));
 //# sourceMappingURL=example.js.map
