@@ -7,7 +7,9 @@
     "start": "node ./out/example.js"
   },
   "dependencies": {
-    "@types/node": "^8.0.8",
     "parsque": "file:../"
+  },
+  "devDependencies": {
+    "@types/node": "^8.0.9"
   }
 }
