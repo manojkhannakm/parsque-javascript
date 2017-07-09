@@ -1,10 +1,10 @@
 {
   "name": "parsque-example",
   "version": "1.0.0",
-  "main": "./out/example.js",
+  "main": "./dist/example.js",
   "license": "MIT",
   "scripts": {
-    "start": "node ./out/example.js"
+    "start": "node ."
   },
   "dependencies": {
     "parsque": "file:../"
