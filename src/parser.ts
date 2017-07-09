@@ -33,7 +33,7 @@ export default class Parser {
            outputFactory?: (parser: Parser) => Output,
            outputCallback?: (parser: Parser) => void,
            contentFactory?: (parser: Parser) => Content,
-           contentCallback?: (parser: Parser) => void): void {
+           contentCallback?: (parser: Parser) => void): Parser {
         if (inputFactory) {
             this._input = inputFactory(this);
         }
@@ -75,16 +75,20 @@ export default class Parser {
         if (contentCallback) {
             contentCallback(this);
         }
+
+        return this;
     }
 
     parseValue(valueName: string,
-               valueParser: (parser: Parser) => any): void {
+               valueParser: (parser: Parser) => any): Parser {
         this._output[valueName] = valueParser(this);
+
+        return this;
     }
 
     parseValues(valuesName: string,
                 valuesParser: (parser: Parser, index: number) => any,
-                ...indexes: number[]): void {
+                ...indexes: number[]): Parser {
         let indexSet = new Set<number>();
 
         for (let index of indexes.sort()) {
@@ -106,11 +110,13 @@ export default class Parser {
         }
 
         this._output[valuesName] = newValues;
+
+        return this;
     }
 
     parseOutput(outputName: string,
                 parserFactory: () => Parser,
-                outputParser: (parser: Parser) => void): void {
+                outputParser: (parser: Parser) => void): Parser {
         let parser = parserFactory();
 
         parser.create(() => this._input[outputName], undefined,
@@ -120,12 +126,14 @@ export default class Parser {
         outputParser(parser);
 
         this._output[outputName] = parser._output;
+
+        return this;
     }
 
     parseOutputs(outputsName: string,
                  parserFactory: () => Parser,
                  outputsParser: (parser: Parser, index: number) => void,
-                 ...indexes: number[]): void {
+                 ...indexes: number[]): Parser {
         let inputs = this._input[outputsName];
 
         let inputSize = 0;
@@ -181,6 +189,8 @@ export default class Parser {
         }
 
         this._output[outputsName] = newOutputs;
+
+        return this;
     }
 
     get input(): Input {

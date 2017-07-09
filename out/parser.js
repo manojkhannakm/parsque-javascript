@@ -50,9 +50,11 @@ class Parser {
         if (contentCallback) {
             contentCallback(this);
         }
+        return this;
     }
     parseValue(valueName, valueParser) {
         this._output[valueName] = valueParser(this);
+        return this;
     }
     parseValues(valuesName, valuesParser, ...indexes) {
         let indexSet = new Set();
@@ -70,12 +72,14 @@ class Parser {
             newValues[index] = valuesParser(this, index);
         }
         this._output[valuesName] = newValues;
+        return this;
     }
     parseOutput(outputName, parserFactory, outputParser) {
         let parser = parserFactory();
         parser.create(() => this._input[outputName], undefined, () => this._output[outputName], undefined, () => this._content[outputName], undefined);
         outputParser(parser);
         this._output[outputName] = parser._output;
+        return this;
     }
     parseOutputs(outputsName, parserFactory, outputsParser, ...indexes) {
         let inputs = this._input[outputsName];
@@ -119,6 +123,7 @@ class Parser {
             newOutputs[index] = parser._output;
         }
         this._output[outputsName] = newOutputs;
+        return this;
     }
     get input() {
         return this._input;
