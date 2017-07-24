@@ -1,18 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const parsque_1 = require("parsque");
+const parsque_api_1 = require("parsque-api");
 const fs = require("fs");
 const FILES_PATH = "./files/";
 const FILE_1_PATH = FILES_PATH + "file_1.txt";
 const FILE_2_PATH = FILES_PATH + "file_2.txt";
 const FILE_3_PATH = FILES_PATH + "file_3.txt";
-class FileInput extends parsque_1.Input {
+class FileInput extends parsque_api_1.Input {
 }
-class FileOutput extends parsque_1.Output {
+class FileOutput extends parsque_api_1.Output {
 }
-class FileContent extends parsque_1.Content {
+class FileContent extends parsque_api_1.Content {
 }
-class FileParser extends parsque_1.Parser {
+class FileParser extends parsque_api_1.Parser {
     inputCreated() {
         super.inputCreated();
         let input = this.input;
@@ -51,7 +51,7 @@ class FileParser extends parsque_1.Parser {
         this.parseOutputs("files", () => new FileParser(), outputsParser, ...indexes);
     }
 }
-let parser = new parsque_1.ParserBuilder(() => new FileParser())
+let parser = new parsque_api_1.ParserBuilder(() => new FileParser())
     .withInputFactory(() => {
     let input = new FileInput();
     input.path = FILE_1_PATH;
@@ -72,4 +72,5 @@ parser.parseFiles(childParser => {
     childParser.parseLine3();
 }, 0, 2);
 console.log(JSON.stringify(parser.output, null, 2));
+
 //# sourceMappingURL=example.js.map

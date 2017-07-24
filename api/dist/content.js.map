@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/content.ts"],"names":[],"mappings":";;AAAA,qCAA8B;AAE9B,aAA6B,SAAQ,gBAAM;CAC1C;AADD,0BACC","file":"content.js","sourcesContent":["import Entity from \"./entity\";\r\n\r\nexport default class Content extends Entity {\r\n}\r\n"]}

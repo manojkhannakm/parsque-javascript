@@ -1,8 +1,9 @@
 {
-  "name": "parsque-example",
+  "name": "parsque-api",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/example.js",
+  "main": "./dist/parsque.js",
+  "types": "./dist/parsque.d.ts",
   "scripts": {
     "clean": "gulp clean",
     "build": "gulp build",
@@ -15,9 +16,6 @@
     "email": "manojkhannakm@gmail.com"
   },
   "license": "MIT",
-  "dependencies": {
-    "parsque-api": "file:../api"
-  },
   "devDependencies": {
     "@types/node": "^8.0.13",
     "del": "^3.0.0",

@@ -1,7 +1,0 @@
-{
-  "name": "parsque",
-  "version": "1.0.0",
-  "main": "./dist/parsque.js",
-  "types": "./dist/parsque.d.ts",
-  "license": "MIT"
-}
