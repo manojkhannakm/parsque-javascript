@@ -2,13 +2,11 @@
   "name": "parsque-api",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/parsque.js",
-  "types": "./dist/parsque.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "clean": "gulp clean",
     "build": "gulp build",
-    "watch": "gulp watch",
-    "start": "node ."
+    "start": "gulp start"
   },
   "keywords": [],
   "author": {
@@ -16,10 +14,16 @@
     "email": "manojkhannakm@gmail.com"
   },
   "license": "MIT",
+  "dependencies": {
+    "async": "^2.5.0",
+    "bluebird": "^3.5.0"
+  },
   "devDependencies": {
-    "@types/node": "^8.0.13",
-    "del": "^3.0.0",
+    "@types/async": "^2.0.40",
+    "@types/bluebird": "^3.5.8",
+    "@types/node": "^8.0.20",
     "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-typescript": "^3.2.1",
     "typescript": "^2.4.1"

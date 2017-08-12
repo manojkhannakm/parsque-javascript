@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/input.ts"],"names":[],"mappings":";;AAAA,qCAA8B;AAE9B,WAA2B,SAAQ,gBAAM;CACxC;AADD,wBACC","file":"input.js","sourcesContent":["import Entity from \"./entity\";\r\n\r\nexport default class Input extends Entity {\r\n}\r\n"]}

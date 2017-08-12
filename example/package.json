@@ -2,12 +2,10 @@
   "name": "parsque-example",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/example.js",
+  "main": "./dist/index.js",
   "scripts": {
-    "clean": "gulp clean",
     "build": "gulp build",
-    "watch": "gulp watch",
-    "start": "node ."
+    "start": "gulp start"
   },
   "keywords": [],
   "author": {
@@ -19,9 +17,9 @@
     "parsque-api": "file:../api"
   },
   "devDependencies": {
-    "@types/node": "^8.0.13",
-    "del": "^3.0.0",
+    "@types/node": "^8.0.20",
     "gulp": "^3.9.1",
+    "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.0",
     "gulp-typescript": "^3.2.1",
     "typescript": "^2.4.1"
