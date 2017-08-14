@@ -1,0 +1,1 @@
+{"version":3,"sources":["../src/output.ts"],"names":[],"mappings":";;AAAA,qCAA8B;AAE9B,YAA4B,SAAQ,gBAAM;CACzC;AADD,yBACC","file":"output.js","sourcesContent":["import Entity from \"./entity\";\r\n\r\nexport default class Output extends Entity {\r\n}\r\n"]}

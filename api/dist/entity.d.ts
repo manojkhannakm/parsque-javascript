@@ -1,3 +1,3 @@
 export default class Entity {
-    [valueName: string]: any;
+    [key: string]: any;
 }

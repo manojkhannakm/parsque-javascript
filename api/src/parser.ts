@@ -1,4 +1,4 @@
-import * as Promise from "bluebird";
+// import * as Promise from "bluebird";
 
 import Input from "./input";
 import Output from "./output";
@@ -9,7 +9,7 @@ export default class Parser {
     public output: Output;
     public content: Content;
 
-    constructor() {
+    public constructor() {
         this.input = new Input();
         this.output = new Output();
         this.content = new Content();
@@ -51,44 +51,51 @@ export default class Parser {
         });
     }
 
-    create(inputFactory?: (parser: Parser) => Promise<Input>,
-           outputFactory?: (parser: Parser) => Promise<Output>,
-           contentFactory?: (parser: Parser) => Promise<Content>): Promise<Parser> {
-        let promise: Promise<any>;
+    public create(inputFactory?: (parser: Parser) => Promise<Input>,
+                  outputFactory?: (parser: Parser) => Promise<Output>,
+                  contentFactory?: (parser: Parser) => Promise<Content>): Promise<Parser> {
+        let promise: Promise<any> = new Promise<any>(resolve => {
+            resolve();
+        });
 
         if (inputFactory) {
-            promise = inputFactory(this);
+            promise = promise.then(() => inputFactory(this));
         } else {
-            promise = this.createInput();
+            promise = promise.then(() => this.createInput());
         }
 
-        promise = promise.then(value => this.inputCreated());
+        promise = promise.then(value => {
+            this.input = value;
+        }).then(() => this.inputCreated());
 
         if (outputFactory) {
-            promise = outputFactory(this);
+            promise = promise.then(() => outputFactory(this));
         } else {
-            promise = this.createOutput();
+            promise = promise.then(() => this.createOutput());
         }
 
-        promise = promise.then(value => this.outputCreated());
+        promise = promise.then(value => {
+            this.output = value;
+        }).then(() => this.outputCreated());
 
         if (contentFactory) {
-            promise = contentFactory(this);
+            promise = promise.then(() => contentFactory(this));
         } else {
-            promise = this.createContent();
+            promise = promise.then(() => this.createContent());
         }
 
-        promise = promise.then(value => this.contentCreated());
+        promise = promise.then(value => {
+            this.content = value;
+        }).then(() => this.contentCreated());
 
-        return promise.then(value => this);
+        return promise.then(() => this);
     }
 
-    parseValue(valueName: string,
-               valueParser: (parser: Parser) => Promise<any>): Promise<Parser> {
-        return valueParser(this)
-            .then(value => {
-                this.output[valueName] = value;
-            }).then(value => this);
+    public parseValue(valueName: string,
+                      valueParser: (parser: Parser) => Promise<any>): Promise<Parser> {
+        return valueParser(this).then(value => {
+            this.output[valueName] = value;
+        }).then(() => this);
     }
 
     // parseValues(valuesName: string,
