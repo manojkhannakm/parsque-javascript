@@ -1,8 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-// import * as Promise from "bluebird";
-const fs = require("fs");
 const parsque_api_1 = require("parsque-api");
+const fs = require("fs");
 const FILES_PATH = "./files/";
 const FILE_1_PATH = FILES_PATH + "file_1.txt";
 const FILE_2_PATH = FILES_PATH + "file_2.txt";
@@ -56,7 +55,7 @@ class FileParser extends parsque_api_1.Parser {
                     return;
                 }
                 let content = new FileContent();
-                content.lines = data.split(/\s+/);
+                content.lines = data.split(/[\n\r]+/);
                 resolve(content);
             });
         });
@@ -66,20 +65,20 @@ class FileParser extends parsque_api_1.Parser {
             resolve(parseInt(this.content.lines[0]));
         }));
     }
-    parseString() {
-        return this.parseValue("string", parser => new Promise(resolve => {
-            resolve(this.content.lines[1]);
-        }));
+    parseStrings(...indexes) {
+        return this.parseValues("strings", (parser, index) => new Promise(resolve => {
+            resolve(this.content.lines[1].split(/, /)[index]);
+        }), ...indexes);
     }
 }
 new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
-    .then(parser => parser.parseString())
+    .then(parser => parser.parseStrings(0, 2))
     .then(parser => {
-    console.log(parser.output);
+    console.log(JSON.stringify(parser.output, null, 2));
 })
     .catch(error => {
-    console.log(error);
+    console.error(error);
 });
 
 //# sourceMappingURL=index.js.map

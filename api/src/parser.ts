@@ -1,5 +1,4 @@
 // import * as Promise from "bluebird";
-
 import Input from "./input";
 import Output from "./output";
 import Content from "./content";
@@ -85,38 +84,47 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         return promise.then(() => this);
     }
 
-    public parseValue(valueName: keyof O,
-                      valueParser: (parser: this) => Promise<any>): Promise<this> {
+    public parseValue<V extends keyof O>(valueName: V,
+                                         valueParser: (parser: this) => Promise<O[V]>): Promise<this> {
         return valueParser(this).then(value => {
             this.output[valueName] = value;
         }).then(() => this);
     }
 
-    // parseValues(valuesName: string,
-    //             valuesParser: (parser: Parser, index: number) => Promise<any>,
-    //             ...indexes: number[]): Parser {
-    //     let indexSet: Set<number> = new Set<number>();
-    //
-    //     for (let index of indexes.sort()) {
-    //         if (index >= 0) {
-    //             indexSet.add(index);
-    //         }
-    //     }
-    //
-    //     let newValues: any[] = [];
-    //
-    //     let values = this.output[valuesName];
-    //
-    //     if (values && Array.isArray(values)) {
-    //         newValues.push(values);
-    //     }
-    //
-    //     for (let index of indexSet) {
-    //         newValues[index] = valuesParser(this, index);
-    //     }
-    //
-    //     this.output[valuesName] = newValues;
-    //
-    //     return this;
-    // }
+    public parseValues<V extends keyof O>(valuesName: V,
+                                          valuesParser: (parser: this, index: number) => Promise<any>,
+                                          ...indexes: number[]): Promise<this> {
+        let indexSet: Set<number> = new Set<number>();
+
+        for (let index of indexes.sort()) {
+            if (index >= 0) {
+                indexSet.add(index);
+            }
+        }
+
+        let newValues: O[V] = [];
+
+        let values = this.output[valuesName];
+
+        if (values && Array.isArray(values)) {
+            (newValues as any[]).push(values);
+        }
+
+        let promise: Promise<any> = new Promise<any>(resolve => {
+            resolve();
+        });
+
+        for (let index of indexSet) {
+            promise = promise.then(() => valuesParser(this, index))
+                .then(value => {
+                    newValues[index] = value;
+                });
+        }
+
+        promise = promise.then(() => {
+            this.output[valuesName] = newValues;
+        });
+
+        return promise.then(() => this);
+    }
 }

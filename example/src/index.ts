@@ -1,7 +1,5 @@
-// import * as Promise from "bluebird";
-import * as fs from "fs";
-
 import {Content, Input, Output, Parser} from "parsque-api";
+import * as fs from "fs";
 
 const FILES_PATH = "./files/";
 const FILE_1_PATH = FILES_PATH + "file_1.txt";
@@ -17,7 +15,7 @@ class FileInput extends Input {
 
 class FileOutput extends Output {
     number: number;
-    string: string;
+    strings: string[];
 
     file: FileOutput;
     files: FileOutput[];
@@ -81,7 +79,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
                 }
 
                 let content: FileContent = new FileContent();
-                content.lines = data.split(/\s+/);
+                content.lines = data.split(/[\n\r]+/);
 
                 resolve(content);
             });
@@ -89,24 +87,24 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
     }
 
     public parseNumber(): Promise<FileParser> {
-        return this.parseValue("number", parser => new Promise<any>(resolve => {
+        return this.parseValue("number", parser => new Promise<number>(resolve => {
             resolve(parseInt(this.content.lines[0]));
         }));
     }
 
-    public parseString(): Promise<FileParser> {
-        return this.parseValue("string", parser => new Promise<any>(resolve => {
-            resolve(this.content.lines[1]);
-        }));
+    public parseStrings(...indexes: number[]): Promise<FileParser> {
+        return this.parseValues("strings", (parser, index) => new Promise<string>(resolve => {
+            resolve(this.content.lines[1].split(/, /)[index]);
+        }), ...indexes);
     }
 }
 
 new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
-    .then(parser => parser.parseString())
+    .then(parser => parser.parseStrings(0, 2))
     .then(parser => {
-        console.log(parser.output);
+        console.log(JSON.stringify(parser.output, null, 2));
     })
     .catch(error => {
-        console.log(error);
+        console.error(error);
     });

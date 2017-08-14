@@ -1,5 +1,4 @@
 "use strict";
-// import * as Promise from "bluebird";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Parser {
     createInput() {
@@ -69,6 +68,32 @@ class Parser {
         return valueParser(this).then(value => {
             this.output[valueName] = value;
         }).then(() => this);
+    }
+    parseValues(valuesName, valuesParser, ...indexes) {
+        let indexSet = new Set();
+        for (let index of indexes.sort()) {
+            if (index >= 0) {
+                indexSet.add(index);
+            }
+        }
+        let newValues = [];
+        let values = this.output[valuesName];
+        if (values && Array.isArray(values)) {
+            newValues.push(values);
+        }
+        let promise = new Promise(resolve => {
+            resolve();
+        });
+        for (let index of indexSet) {
+            promise = promise.then(() => valuesParser(this, index))
+                .then(value => {
+                newValues[index] = value;
+            });
+        }
+        promise = promise.then(() => {
+            this.output[valuesName] = newValues;
+        });
+        return promise.then(() => this);
     }
 }
 exports.default = Parser;
