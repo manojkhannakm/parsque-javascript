@@ -12,6 +12,6 @@ export default class Parser<I extends Input, O extends Output, C extends Content
     protected createContent(): Promise<C>;
     protected contentCreated(): Promise<void>;
     create(inputFactory?: (parser: this) => Promise<I>, outputFactory?: (parser: this) => Promise<O>, contentFactory?: (parser: this) => Promise<C>): Promise<this>;
-    parseValue<V extends keyof O>(valueName: V, valueParser: (parser: this) => Promise<O[V]>): Promise<this>;
-    parseValues<V extends keyof O>(valuesName: V, valuesParser: (parser: this, index: number) => Promise<any>, ...indexes: number[]): Promise<this>;
+    parseValue<N extends keyof O>(valueName: N, valueParser: (parser: this) => Promise<O[N]>): Promise<this>;
+    parseValues<N extends keyof O>(valuesName: N, valuesParser: (parser: this, index: number) => Promise<any>, ...indexes: number[]): Promise<this>;
 }

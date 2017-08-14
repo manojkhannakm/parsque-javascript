@@ -36,38 +36,53 @@ class Parser {
             resolve();
         });
         if (inputFactory) {
-            promise = promise.then(() => inputFactory(this));
+            promise = promise
+                .then(() => inputFactory(this));
         }
         else {
-            promise = promise.then(() => this.createInput());
+            promise = promise
+                .then(() => this.createInput());
         }
-        promise = promise.then(value => {
-            this.input = value;
-        }).then(() => this.inputCreated());
+        promise = promise
+            .then(input => {
+            this.input = input;
+        })
+            .then(() => this.inputCreated());
         if (outputFactory) {
-            promise = promise.then(() => outputFactory(this));
+            promise = promise
+                .then(() => outputFactory(this));
         }
         else {
-            promise = promise.then(() => this.createOutput());
+            promise = promise
+                .then(() => this.createOutput());
         }
-        promise = promise.then(value => {
-            this.output = value;
-        }).then(() => this.outputCreated());
+        promise = promise
+            .then(output => {
+            this.output = output;
+        })
+            .then(() => this.outputCreated());
         if (contentFactory) {
-            promise = promise.then(() => contentFactory(this));
+            promise = promise
+                .then(() => contentFactory(this));
         }
         else {
-            promise = promise.then(() => this.createContent());
+            promise = promise
+                .then(() => this.createContent());
         }
-        promise = promise.then(value => {
-            this.content = value;
-        }).then(() => this.contentCreated());
-        return promise.then(() => this);
+        promise = promise
+            .then(content => {
+            this.content = content;
+        })
+            .then(() => this.contentCreated());
+        return promise
+            .then(() => this);
     }
     parseValue(valueName, valueParser) {
-        return valueParser(this).then(value => {
+        return valueParser(this)
+            .then(value => {
             this.output[valueName] = value;
-        }).then(() => this);
+        })
+            .then(() => this);
     }
     parseValues(valuesName, valuesParser, ...indexes) {
         let indexSet = new Set();
@@ -85,15 +100,17 @@ class Parser {
             resolve();
         });
         for (let index of indexSet) {
-            promise = promise.then(() => valuesParser(this, index))
+            promise = promise
+                .then(() => valuesParser(this, index))
                 .then(value => {
                 newValues[index] = value;
             });
         }
-        promise = promise.then(() => {
+        return promise
+            .then(() => {
             this.output[valuesName] = newValues;
-        });
-        return promise.then(() => this);
+        })
+            .then(() => this);
     }
 }
 exports.default = Parser;
