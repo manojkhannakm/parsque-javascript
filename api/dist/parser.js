@@ -1,18 +1,10 @@
 "use strict";
 // import * as Promise from "bluebird";
 Object.defineProperty(exports, "__esModule", { value: true });
-const input_1 = require("./input");
-const output_1 = require("./output");
-const content_1 = require("./content");
 class Parser {
-    constructor() {
-        this.input = new input_1.default();
-        this.output = new output_1.default();
-        this.content = new content_1.default();
-    }
     createInput() {
         return new Promise(resolve => {
-            resolve(new input_1.default());
+            resolve();
         });
     }
     inputCreated() {
@@ -22,7 +14,7 @@ class Parser {
     }
     createOutput() {
         return new Promise(resolve => {
-            resolve(new output_1.default());
+            resolve();
         });
     }
     outputCreated() {
@@ -32,7 +24,7 @@ class Parser {
     }
     createContent() {
         return new Promise(resolve => {
-            resolve(new content_1.default());
+            resolve();
         });
     }
     contentCreated() {

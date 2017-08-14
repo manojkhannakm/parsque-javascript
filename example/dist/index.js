@@ -14,14 +14,16 @@ class FileOutput extends parsque_api_1.Output {
 class FileContent extends parsque_api_1.Content {
 }
 class FileParser extends parsque_api_1.Parser {
-    constructor(path = "") {
+    constructor(path) {
         super();
         this.path = path;
     }
     createInput() {
         return new Promise(resolve => {
             let input = new FileInput();
-            input.path = this.path;
+            if (this.path) {
+                input.path = this.path;
+            }
             resolve(input);
         });
     }
@@ -48,19 +50,16 @@ class FileParser extends parsque_api_1.Parser {
     }
     createContent() {
         return new Promise((resolve, reject) => {
-            let content = new FileContent();
             fs.readFile(this.input.path, "utf-8", (err, data) => {
                 if (err) {
                     reject(err);
                     return;
                 }
+                let content = new FileContent();
                 content.lines = data.split(/\s+/);
                 resolve(content);
             });
         });
-    }
-    create(inputFactory, outputFactory, contentFactory) {
-        return super.create(inputFactory, outputFactory, contentFactory);
     }
     parseNumber() {
         return this.parseValue("number", parser => new Promise(resolve => {
@@ -73,7 +72,7 @@ class FileParser extends parsque_api_1.Parser {
         }));
     }
 }
-new FileParser().create()
+new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
     .then(parser => parser.parseString())
     .then(parser => {

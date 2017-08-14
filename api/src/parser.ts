@@ -4,20 +4,14 @@ import Input from "./input";
 import Output from "./output";
 import Content from "./content";
 
-export default class Parser {
-    public input: Input;
-    public output: Output;
-    public content: Content;
+export default class Parser<I extends Input, O extends Output, C extends Content> {
+    public input: I;
+    public output: O;
+    public content: C;
 
-    public constructor() {
-        this.input = new Input();
-        this.output = new Output();
-        this.content = new Content();
-    }
-
-    protected createInput(): Promise<Input> {
-        return new Promise<Input>(resolve => {
-            resolve(new Input());
+    protected createInput(): Promise<I> {
+        return new Promise<I>(resolve => {
+            resolve();
         });
     }
 
@@ -27,9 +21,9 @@ export default class Parser {
         });
     }
 
-    protected createOutput(): Promise<Output> {
-        return new Promise<Output>(resolve => {
-            resolve(new Output());
+    protected createOutput(): Promise<O> {
+        return new Promise<O>(resolve => {
+            resolve();
         });
     }
 
@@ -39,9 +33,9 @@ export default class Parser {
         });
     }
 
-    protected createContent(): Promise<Content> {
-        return new Promise<Content>(resolve => {
-            resolve(new Content());
+    protected createContent(): Promise<C> {
+        return new Promise<C>(resolve => {
+            resolve();
         });
     }
 
@@ -51,9 +45,9 @@ export default class Parser {
         });
     }
 
-    public create(inputFactory?: (parser: Parser) => Promise<Input>,
-                  outputFactory?: (parser: Parser) => Promise<Output>,
-                  contentFactory?: (parser: Parser) => Promise<Content>): Promise<Parser> {
+    public create(inputFactory?: (parser: this) => Promise<I>,
+                  outputFactory?: (parser: this) => Promise<O>,
+                  contentFactory?: (parser: this) => Promise<C>): Promise<this> {
         let promise: Promise<any> = new Promise<any>(resolve => {
             resolve();
         });
@@ -91,8 +85,8 @@ export default class Parser {
         return promise.then(() => this);
     }
 
-    public parseValue(valueName: string,
-                      valueParser: (parser: Parser) => Promise<any>): Promise<Parser> {
+    public parseValue(valueName: keyof O,
+                      valueParser: (parser: this) => Promise<any>): Promise<this> {
         return valueParser(this).then(value => {
             this.output[valueName] = value;
         }).then(() => this);

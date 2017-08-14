@@ -1,17 +1,16 @@
 import Input from "./input";
 import Output from "./output";
 import Content from "./content";
-export default class Parser {
-    input: Input;
-    output: Output;
-    content: Content;
-    constructor();
-    protected createInput(): Promise<Input>;
+export default class Parser<I extends Input, O extends Output, C extends Content> {
+    input: I;
+    output: O;
+    content: C;
+    protected createInput(): Promise<I>;
     protected inputCreated(): Promise<void>;
-    protected createOutput(): Promise<Output>;
+    protected createOutput(): Promise<O>;
     protected outputCreated(): Promise<void>;
-    protected createContent(): Promise<Content>;
+    protected createContent(): Promise<C>;
     protected contentCreated(): Promise<void>;
-    create(inputFactory?: (parser: Parser) => Promise<Input>, outputFactory?: (parser: Parser) => Promise<Output>, contentFactory?: (parser: Parser) => Promise<Content>): Promise<Parser>;
-    parseValue(valueName: string, valueParser: (parser: Parser) => Promise<any>): Promise<Parser>;
+    create(inputFactory?: (parser: this) => Promise<I>, outputFactory?: (parser: this) => Promise<O>, contentFactory?: (parser: this) => Promise<C>): Promise<this>;
+    parseValue(valueName: keyof O, valueParser: (parser: this) => Promise<any>): Promise<this>;
 }

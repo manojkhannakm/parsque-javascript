@@ -27,15 +27,18 @@ class FileContent extends Content {
     lines: string[];
 }
 
-class FileParser extends Parser {
-    public constructor(private path: string = "") {
+class FileParser extends Parser<FileInput, FileOutput, FileContent> {
+    public constructor(private path?: string) {
         super();
     }
 
-    protected createInput(): Promise<Input> {
-        return new Promise<Input>(resolve => {
+    protected createInput(): Promise<FileInput> {
+        return new Promise<FileInput>(resolve => {
             let input: FileInput = new FileInput();
-            input.path = this.path;
+
+            if (this.path) {
+                input.path = this.path;
+            }
 
             resolve(input);
         });
@@ -43,7 +46,7 @@ class FileParser extends Parser {
 
     protected inputCreated(): Promise<void> {
         return new Promise<void>(resolve => {
-            let input: FileInput = this.input as FileInput;
+            let input: FileInput = this.input;
 
             let childInput: FileInput = new FileInput();
             childInput.path = FILE_2_PATH;
@@ -63,22 +66,21 @@ class FileParser extends Parser {
         });
     }
 
-    protected createOutput(): Promise<Output> {
-        return new Promise<Output>(resolve => {
+    protected createOutput(): Promise<FileOutput> {
+        return new Promise<FileOutput>(resolve => {
             resolve(new FileOutput());
         });
     }
 
-    protected createContent(): Promise<Content> {
-        return new Promise<Content>((resolve, reject) => {
-            let content: FileContent = new FileContent();
-
-            fs.readFile((this.input as FileInput).path, "utf-8", (err, data) => {
+    protected createContent(): Promise<FileContent> {
+        return new Promise<FileContent>((resolve, reject) => {
+            fs.readFile(this.input.path, "utf-8", (err, data) => {
                 if (err) {
                     reject(err);
                     return;
                 }
 
+                let content: FileContent = new FileContent();
                 content.lines = data.split(/\s+/);
 
                 resolve(content);
@@ -86,26 +88,20 @@ class FileParser extends Parser {
         });
     }
 
-    create(inputFactory?: (parser: Parser) => Promise<Input>,
-           outputFactory?: (parser: Parser) => Promise<Output>,
-           contentFactory?: (parser: Parser) => Promise<Content>): Promise<FileParser> {
-        return super.create(inputFactory, outputFactory, contentFactory) as Promise<FileParser>;
-    }
-
     public parseNumber(): Promise<FileParser> {
         return this.parseValue("number", parser => new Promise<any>(resolve => {
-            resolve(parseInt((this.content as FileContent).lines[0]));
-        })) as Promise<FileParser>;
+            resolve(parseInt(this.content.lines[0]));
+        }));
     }
 
     public parseString(): Promise<FileParser> {
         return this.parseValue("string", parser => new Promise<any>(resolve => {
             resolve(this.content.lines[1]);
-        })) as Promise<FileParser>;
+        }));
     }
 }
 
-new FileParser().create()
+new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
     .then(parser => parser.parseString())
     .then(parser => {
