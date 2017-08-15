@@ -13,8 +13,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
     }
 
-    protected inputCreated(): Promise<void> {
-        return new Promise<void>(resolve => {
+    protected inputCreated(): Promise<any> {
+        return new Promise<any>(resolve => {
             resolve();
         });
     }
@@ -25,8 +25,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
     }
 
-    protected outputCreated(): Promise<void> {
-        return new Promise<void>(resolve => {
+    protected outputCreated(): Promise<any> {
+        return new Promise<any>(resolve => {
             resolve();
         });
     }
@@ -37,8 +37,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
     }
 
-    protected contentCreated(): Promise<void> {
-        return new Promise<void>(resolve => {
+    protected contentCreated(): Promise<any> {
+        return new Promise<any>(resolve => {
             resolve();
         });
     }
@@ -96,8 +96,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             .then(() => this);
     }
 
-    public parseValue<N extends keyof O>(valueName: N,
-                                         valueParser: (parser: this) => Promise<O[N]>): Promise<this> {
+    public parseValue(valueName: keyof O,
+                      valueParser: (parser: this) => Promise<any>): Promise<this> {
         return valueParser(this)
             .then(value => {
                 this.output[valueName] = value;
@@ -105,9 +105,9 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             .then(() => this);
     }
 
-    public parseValues<N extends keyof O>(valuesName: N,
-                                          valuesParser: (parser: this, index: number) => Promise<any>,
-                                          ...indexes: number[]): Promise<this> {
+    public parseValues(valuesName: keyof O,
+                       valuesParser: (parser: this, index: number) => Promise<any>,
+                       ...indexes: number[]): Promise<this> {
         let indexSet: Set<number> = new Set<number>();
 
         for (let index of indexes.sort()) {
@@ -116,12 +116,12 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             }
         }
 
-        let newValues: O[N] = [];
+        let newValues: any[] = [];
 
         let values = this.output[valuesName];
 
         if (values && Array.isArray(values)) {
-            (newValues as any[]).push(values);
+            newValues.push(values);
         }
 
         let promise: Promise<any> = new Promise<any>(resolve => {
@@ -143,33 +143,29 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             .then(() => this);
     }
 
-    // public parseOutput<P extends this, N extends keyof O>(outputName: N,
-    //                                                       parserFactory: (parser: this) => Promise<P>,
-    //                                                       outputParser: (parser: P) => Promise<void>): Promise<this> {
-    //     let childParser: P;
-    //
-    //     return parserFactory(this).then(parser => {
-    //         childParser = parser;
-    //     }).then(() => this);
-    //
-    //     // return parserFactory(this)
-    //     //     .then(parser => {
-    //     //         return parser.create(() => new Promise<I>(resolve => {
-    //     //             resolve((this.input as any)[outputName]);
-    //     //         }), () => new Promise<O>(resolve => {
-    //     //             resolve(this.output[outputName]);
-    //     //         }), () => new Promise<C>(resolve => {
-    //     //             resolve((this.content as any)[outputName]);
-    //     //         }))
-    //     //             .then(parser => {
-    //     //                 return outputParser(parser)
-    //     //                     .then(() => {
-    //     //                         this.output[outputName] = parser.output;
-    //     //                     })
-    //     //             })
-    //     //     })
-    //     //     .then(() => this);
-    // }
+    public parseOutput<X extends Input, Y extends Output, Z extends Content, P extends Parser<X, Y, Z>>(outputName: keyof O,
+                                                                                                        parserFactory: (parser: this) => Promise<P>,
+                                                                                                        outputParser: (childParser: P) => Promise<any>): Promise<this> {
+        return parserFactory(this)
+            .then(childParser => {
+                let childInput = (this.input as any)[outputName],
+                    childOutput = this.output[outputName],
+                    childContent = (this.content as any)[outputName];
+
+                return childParser.create(childInput ? () => new Promise<X>(resolve => {
+                    resolve(childInput);
+                }) : undefined, childOutput ? () => new Promise<Y>(resolve => {
+                    resolve(childOutput);
+                }) : undefined, childContent ? () => new Promise<Z>(resolve => {
+                    resolve(childContent);
+                }) : undefined)
+                    .then(() => outputParser(childParser))
+                    .then(() => {
+                        this.output[outputName] = childParser.output;
+                    });
+            })
+            .then(() => this);
+    }
 
     // parseOutputs<X extends Input, Y extends Output, Z extends Content>(outputsName: string,
     //                                                                    parserFactory: () => Parser<X, Y, Z>,

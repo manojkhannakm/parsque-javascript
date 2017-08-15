@@ -112,6 +112,24 @@ class Parser {
         })
             .then(() => this);
     }
+    parseOutput(outputName, parserFactory, outputParser) {
+        return parserFactory(this)
+            .then(childParser => {
+            let childInput = this.input[outputName], childOutput = this.output[outputName], childContent = this.content[outputName];
+            return childParser.create(childInput ? () => new Promise(resolve => {
+                resolve(childInput);
+            }) : undefined, childOutput ? () => new Promise(resolve => {
+                resolve(childOutput);
+            }) : undefined, childContent ? () => new Promise(resolve => {
+                resolve(childContent);
+            }) : undefined)
+                .then(() => outputParser(childParser))
+                .then(() => {
+                this.output[outputName] = childParser.output;
+            });
+        })
+            .then(() => this);
+    }
 }
 exports.default = Parser;
 

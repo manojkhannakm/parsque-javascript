@@ -61,7 +61,7 @@ class FileParser extends parsque_api_1.Parser {
         });
     }
     parseNumber() {
-        return this.parseValue("number", parser => new Promise(resolve => {
+        return this.parseValue("number", () => new Promise(resolve => {
             resolve(parseInt(this.content.lines[0]));
         }));
     }
@@ -70,10 +70,17 @@ class FileParser extends parsque_api_1.Parser {
             resolve(this.content.lines[1].split(/, /)[index]);
         }), ...indexes);
     }
+    parseFile(outputParser) {
+        return this.parseOutput("file", () => new Promise(resolve => {
+            resolve(new FileParser());
+        }), outputParser);
+    }
 }
 new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
     .then(parser => parser.parseStrings(0, 2))
+    .then(parser => parser.parseFile(childParser => childParser.parseNumber()
+    .then(childParser => childParser.parseStrings(0, 1, 2))))
     .then(parser => {
     console.log(JSON.stringify(parser.output, null, 2));
 })

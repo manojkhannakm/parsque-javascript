@@ -42,8 +42,8 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
         });
     }
 
-    protected inputCreated(): Promise<void> {
-        return new Promise<void>(resolve => {
+    protected inputCreated(): Promise<any> {
+        return new Promise<any>(resolve => {
             let input: FileInput = this.input;
 
             let childInput: FileInput = new FileInput();
@@ -87,7 +87,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
     }
 
     public parseNumber(): Promise<FileParser> {
-        return this.parseValue("number", parser => new Promise<number>(resolve => {
+        return this.parseValue("number", () => new Promise<number>(resolve => {
             resolve(parseInt(this.content.lines[0]));
         }));
     }
@@ -97,11 +97,19 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
             resolve(this.content.lines[1].split(/, /)[index]);
         }), ...indexes);
     }
+
+    public parseFile(outputParser: (childParser: FileParser) => Promise<any>): Promise<FileParser> {
+        return this.parseOutput("file", () => new Promise<FileParser>(resolve => {
+            resolve(new FileParser());
+        }), outputParser);
+    }
 }
 
 new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
     .then(parser => parser.parseStrings(0, 2))
+    .then(parser => parser.parseFile(childParser => childParser.parseNumber()
+        .then(childParser => childParser.parseStrings(0, 1, 2))))
     .then(parser => {
         console.log(JSON.stringify(parser.output, null, 2));
     })
