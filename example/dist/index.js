@@ -60,13 +60,13 @@ class FileParser extends parsque_api_1.Parser {
             });
         });
     }
-    parseNumber() {
-        return this.parseValue("number", () => new Promise(resolve => {
-            resolve(parseInt(this.content.lines[0]));
+    parseWord() {
+        return this.parseValue("word", () => new Promise(resolve => {
+            resolve(this.content.lines[0]);
         }));
     }
-    parseStrings(...indexes) {
-        return this.parseValues("strings", (parser, index) => new Promise(resolve => {
+    parseWords(...indexes) {
+        return this.parseValues("words", (parser, index) => new Promise(resolve => {
             resolve(this.content.lines[1].split(/, /)[index]);
         }), ...indexes);
     }
@@ -82,12 +82,12 @@ class FileParser extends parsque_api_1.Parser {
     }
 }
 new FileParser(FILE_1_PATH).create()
-    .then(parser => parser.parseNumber())
-    .then(parser => parser.parseStrings(0, 2))
-    .then(parser => parser.parseFile(childParser => childParser.parseNumber()
-    .then(childParser => childParser.parseStrings(0, 1, 2))))
-    .then(parser => parser.parseFiles(childParser => childParser.parseNumber()
-    .then(childParser => childParser.parseStrings(0, 1, 2))))
+    .then(parser => parser.parseWord())
+    .then(parser => parser.parseWords(0, 2))
+    .then(parser => parser.parseFile(childParser => childParser.parseWord()
+    .then(childParser => childParser.parseWords(0, 1, 2))))
+    .then(parser => parser.parseFiles(childParser => childParser.parseWord()
+    .then(childParser => childParser.parseWords(0, 1, 2)), 0, 2))
     .then(parser => {
     console.log(JSON.stringify(parser.output, null, 2));
 })
