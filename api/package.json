@@ -14,11 +14,7 @@
     "email": "manojkhannakm@gmail.com"
   },
   "license": "MIT",
-  "dependencies": {
-    "bluebird": "^3.5.0"
-  },
   "devDependencies": {
-    "@types/bluebird": "^3.5.8",
     "@types/node": "^8.0.20",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.2.1",

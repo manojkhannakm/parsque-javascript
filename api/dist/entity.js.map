@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/entity.ts"],"names":[],"mappings":";;AAAA;CAEC;AAFD,yBAEC","file":"entity.js","sourcesContent":["export default class Entity {\r\n    // [valueName: string]: any;\r\n}\r\n"]}
