@@ -14,8 +14,8 @@ class FileInput extends Input {
 }
 
 class FileOutput extends Output {
-    number: number;
-    strings: string[];
+    word: string;
+    words: string[];
 
     file: FileOutput;
     files: FileOutput[];
@@ -86,14 +86,14 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
         });
     }
 
-    public parseNumber(): Promise<FileParser> {
-        return this.parseValue("number", () => new Promise<number>(resolve => {
-            resolve(parseInt(this.content.lines[0]));
+    public parseWord(): Promise<FileParser> {
+        return this.parseValue("word", () => new Promise<string>(resolve => {
+            resolve(this.content.lines[0]);
         }));
     }
 
-    public parseStrings(...indexes: number[]): Promise<FileParser> {
-        return this.parseValues("strings", (parser, index) => new Promise<string>(resolve => {
+    public parseWords(...indexes: number[]): Promise<FileParser> {
+        return this.parseValues("words", (parser, index) => new Promise<string>(resolve => {
             resolve(this.content.lines[1].split(/, /)[index]);
         }), ...indexes);
     }
@@ -113,12 +113,12 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
 }
 
 new FileParser(FILE_1_PATH).create()
-    .then(parser => parser.parseNumber())
-    .then(parser => parser.parseStrings(0, 2))
-    .then(parser => parser.parseFile(childParser => childParser.parseNumber()
-        .then(childParser => childParser.parseStrings(0, 1, 2))))
-    .then(parser => parser.parseFiles(childParser => childParser.parseNumber()
-        .then(childParser => childParser.parseStrings(0, 1, 2))))
+    .then(parser => parser.parseWord())
+    .then(parser => parser.parseWords(0, 2))
+    .then(parser => parser.parseFile(childParser => childParser.parseWord()
+        .then(childParser => childParser.parseWords(0, 1, 2))))
+    .then(parser => parser.parseFiles(childParser => childParser.parseWord()
+        .then(childParser => childParser.parseWords(0, 1, 2))))
     .then(parser => {
         console.log(JSON.stringify(parser.output, null, 2));
     })
