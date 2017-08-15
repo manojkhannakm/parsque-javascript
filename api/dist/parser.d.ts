@@ -15,4 +15,5 @@ export default class Parser<I extends Input, O extends Output, C extends Content
     parseValue(valueName: keyof O, valueParser: (parser: this) => Promise<any>): Promise<this>;
     parseValues(valuesName: keyof O, valuesParser: (parser: this, index: number) => Promise<any>, ...indexes: number[]): Promise<this>;
     parseOutput<X extends Input, Y extends Output, Z extends Content, P extends Parser<X, Y, Z>>(outputName: keyof O, parserFactory: (parser: this) => Promise<P>, outputParser: (childParser: P) => Promise<any>): Promise<this>;
+    parseOutputs<X extends Input, Y extends Output, Z extends Content, P extends Parser<X, Y, Z>>(outputsName: keyof O, parserFactory: (parser: this) => Promise<P>, outputsParser: (childParser: P, index: number) => Promise<any>, ...indexes: number[]): Promise<this>;
 }

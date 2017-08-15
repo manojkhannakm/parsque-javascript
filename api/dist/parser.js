@@ -94,7 +94,7 @@ class Parser {
         let newValues = [];
         let values = this.output[valuesName];
         if (values && Array.isArray(values)) {
-            newValues.push(values);
+            newValues.push(...values);
         }
         let promise = new Promise(resolve => {
             resolve();
@@ -127,6 +127,67 @@ class Parser {
                 .then(() => {
                 this.output[outputName] = childParser.output;
             });
+        })
+            .then(() => this);
+    }
+    parseOutputs(outputsName, parserFactory, outputsParser, ...indexes) {
+        let inputs = this.input[outputsName];
+        let inputSize = 0;
+        if (inputs && Array.isArray(inputs)) {
+            inputSize = inputs.length;
+        }
+        let indexSet = new Set();
+        for (let index of indexes.sort()) {
+            if (index >= 0 && (inputSize == 0 || index < inputSize)) {
+                indexSet.add(index);
+            }
+        }
+        if (indexSet.size == 0) {
+            for (let i = 0; i < inputSize; i++) {
+                indexSet.add(i);
+            }
+        }
+        let newOutputs = [];
+        let outputs = this.output[outputsName];
+        if (outputs && Array.isArray(outputs)) {
+            newOutputs.push(...outputs);
+        }
+        let contents = this.content[outputsName];
+        let promise = new Promise(resolve => {
+            resolve();
+        });
+        for (let index of indexSet) {
+            promise = promise
+                .then(() => parserFactory(this))
+                .then(childParser => {
+                let childInput;
+                if (inputs && Array.isArray(inputs) && index < inputs.length) {
+                    childInput = inputs[index];
+                }
+                let childOutput;
+                if (outputs && Array.isArray(outputs) && index < outputs.length) {
+                    childOutput = outputs[index];
+                }
+                let childContent;
+                if (contents && Array.isArray(contents) && index < contents.length) {
+                    childContent = contents[index];
+                }
+                return childParser.create(childInput ? () => new Promise(resolve => {
+                    resolve(childInput);
+                }) : undefined, childOutput ? () => new Promise(resolve => {
+                    resolve(childOutput);
+                }) : undefined, childContent ? () => new Promise(resolve => {
+                    resolve(childContent);
+                }) : undefined)
+                    .then(() => outputsParser(childParser, index))
+                    .then(() => {
+                    newOutputs[index] = childParser.output;
+                });
+            });
+        }
+        return promise
+            .then(() => {
+            this.output[outputsName] = newOutputs;
         })
             .then(() => this);
     }

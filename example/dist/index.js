@@ -75,11 +75,18 @@ class FileParser extends parsque_api_1.Parser {
             resolve(new FileParser());
         }), outputParser);
     }
+    parseFiles(outputsParser, ...indexes) {
+        return this.parseOutputs("files", () => new Promise(resolve => {
+            resolve(new FileParser());
+        }), outputsParser, ...indexes);
+    }
 }
 new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
     .then(parser => parser.parseStrings(0, 2))
     .then(parser => parser.parseFile(childParser => childParser.parseNumber()
+    .then(childParser => childParser.parseStrings(0, 1, 2))))
+    .then(parser => parser.parseFiles(childParser => childParser.parseNumber()
     .then(childParser => childParser.parseStrings(0, 1, 2))))
     .then(parser => {
     console.log(JSON.stringify(parser.output, null, 2));

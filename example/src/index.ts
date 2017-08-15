@@ -103,12 +103,21 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
             resolve(new FileParser());
         }), outputParser);
     }
+
+    public parseFiles(outputsParser: (childParser: FileParser, index: number) => Promise<any>,
+                      ...indexes: number[]): Promise<FileParser> {
+        return this.parseOutputs("files", () => new Promise<FileParser>(resolve => {
+            resolve(new FileParser());
+        }), outputsParser, ...indexes);
+    }
 }
 
 new FileParser(FILE_1_PATH).create()
     .then(parser => parser.parseNumber())
     .then(parser => parser.parseStrings(0, 2))
     .then(parser => parser.parseFile(childParser => childParser.parseNumber()
+        .then(childParser => childParser.parseStrings(0, 1, 2))))
+    .then(parser => parser.parseFiles(childParser => childParser.parseNumber()
         .then(childParser => childParser.parseStrings(0, 1, 2))))
     .then(parser => {
         console.log(JSON.stringify(parser.output, null, 2));
