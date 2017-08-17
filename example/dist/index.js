@@ -14,19 +14,6 @@ class FileOutput extends parsque_api_1.Output {
 class FileContent extends parsque_api_1.Content {
 }
 class FileParser extends parsque_api_1.Parser {
-    constructor(path) {
-        super();
-        this.path = path;
-    }
-    createInput() {
-        return new Promise(resolve => {
-            let input = new FileInput();
-            if (this.path) {
-                input.path = this.path;
-            }
-            resolve(input);
-        });
-    }
     inputCreated() {
         return new Promise(resolve => {
             let input = this.input;
@@ -82,7 +69,12 @@ class FileParser extends parsque_api_1.Parser {
         }), outputsParser, ...indexes);
     }
 }
-new FileParser(FILE_1_PATH).create()
+new FileParser()
+    .create(parser => new Promise(resolve => {
+    let input = new FileInput();
+    input.path = FILE_1_PATH;
+    resolve(input);
+}))
     .then(parser => parser.parseWord())
     .then(parser => parser.parseWords(0, 2))
     .then(parser => parser.parseFile(childParser => childParser.parseWord()

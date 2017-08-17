@@ -28,22 +28,6 @@ class FileContent extends Content {
 }
 
 class FileParser extends Parser<FileInput, FileOutput, FileContent> {
-    public constructor(private path?: string) {
-        super();
-    }
-
-    protected createInput(): Promise<FileInput> {
-        return new Promise<FileInput>(resolve => {
-            let input: FileInput = new FileInput();
-
-            if (this.path) {
-                input.path = this.path;
-            }
-
-            resolve(input);
-        });
-    }
-
     protected inputCreated(): Promise<any> {
         return new Promise<any>(resolve => {
             let input: FileInput = this.input;
@@ -88,33 +72,38 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
         });
     }
 
-    public parseWord(): Promise<FileParser> {
+    public parseWord(): Promise<this> {
         return this.parseValue("word", () => new Promise<string>(resolve => {
             resolve(this.content.lines[0]);
         }));
     }
 
-    public parseWords(...indexes: number[]): Promise<FileParser> {
+    public parseWords(...indexes: number[]): Promise<this> {
         return this.parseValues("words", (parser, index) => new Promise<string>(resolve => {
             resolve(this.content.lines[1].split(/, /)[index]);
         }), ...indexes);
     }
 
-    public parseFile(outputParser: (childParser: FileParser) => Promise<any>): Promise<FileParser> {
+    public parseFile(outputParser: (childParser: this) => Promise<any>): Promise<this> {
         return this.parseOutput("file", () => new Promise<FileParser>(resolve => {
             resolve(new FileParser());
         }), outputParser);
     }
 
-    public parseFiles(outputsParser: (childParser: FileParser, index: number) => Promise<any>,
-                      ...indexes: number[]): Promise<FileParser> {
+    public parseFiles(outputsParser: (childParser: this, index: number) => Promise<any>, ...indexes: number[]): Promise<this> {
         return this.parseOutputs("files", () => new Promise<FileParser>(resolve => {
             resolve(new FileParser());
         }), outputsParser, ...indexes);
     }
 }
 
-new FileParser(FILE_1_PATH).create()
+new FileParser()
+    .create(parser => new Promise(resolve => {
+        let input: FileInput = new FileInput();
+        input.path = FILE_1_PATH;
+
+        resolve(input);
+    }))
     .then(parser => parser.parseWord())
     .then(parser => parser.parseWords(0, 2))
     .then(parser => parser.parseFile(childParser => childParser.parseWord()
