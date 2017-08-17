@@ -2,7 +2,7 @@
   "name": "parsque-example",
   "version": "1.0.0",
   "description": "",
-  "main": "./dist/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "gulp build",
     "start": "gulp start"
@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "parsque-api": "^1.0.0"
+    "parsque": "^1.0.0"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
