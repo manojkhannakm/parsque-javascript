@@ -1,5 +1,7 @@
-import {Content, Input, Output, Parser} from "parsque-api";
+import * as Promise from "bluebird";
 import * as fs from "fs";
+
+import {Content, Input, Output, Parser} from "parsque-api";
 
 const FILES_PATH = "./files/";
 const FILE_1_PATH = FILES_PATH + "file_1.txt";

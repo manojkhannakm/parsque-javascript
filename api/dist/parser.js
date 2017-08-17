@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+const Promise = require("bluebird");
 class Parser {
     createInput() {
         return new Promise(resolve => {

@@ -1,7 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const parsque_api_1 = require("parsque-api");
+const Promise = require("bluebird");
 const fs = require("fs");
+const parsque_api_1 = require("parsque-api");
 const FILES_PATH = "./files/";
 const FILE_1_PATH = FILES_PATH + "file_1.txt";
 const FILE_2_PATH = FILES_PATH + "file_2.txt";

@@ -14,10 +14,12 @@
   },
   "license": "MIT",
   "dependencies": {
-    "parsque-api": "file:../api"
+    "bluebird": "^3.5.0",
+    "parsque-api": "^1.0.0"
   },
   "devDependencies": {
-    "@types/node": "^8.0.20",
+    "@types/bluebird": "^3.5.8",
+    "@types/node": "^8.0.24",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.0",
