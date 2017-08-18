@@ -97,7 +97,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
 }
 
 new FileParser()
-    .create(parser => new Promise(resolve => {
+    .create(parser => new Promise<FileInput>(resolve => {
         let input: FileInput = new FileInput();
         input.path = FILE_1_PATH;
 
