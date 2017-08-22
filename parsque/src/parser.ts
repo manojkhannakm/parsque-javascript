@@ -48,7 +48,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
     public create(inputFactory?: (parser: this) => Promise<I>,
                   outputFactory?: (parser: this) => Promise<O>,
                   contentFactory?: (parser: this) => Promise<C>): Promise<this> {
-        let promise: Promise<any> = new Promise<any>(resolve => {
+        let promise = new Promise<any>(resolve => {
             resolve();
         });
 
@@ -110,7 +110,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
     public parseValues(valuesName: keyof O,
                        valuesParser: (parser: this, index: number) => Promise<any>,
                        ...indexes: number[]): Promise<this> {
-        let indexSet: Set<number> = new Set<number>();
+        let indexSet = new Set<number>();
 
         for (let index of indexes.sort()) {
             if (index >= 0) {
@@ -120,13 +120,13 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let newValues: any[] = [];
 
-        let values: any[] = this.output[valuesName];
+        let values = this.output[valuesName];
 
         if (values && Array.isArray(values)) {
             newValues.push(...values);
         }
 
-        let promise: Promise<any> = new Promise<any>(resolve => {
+        let promise = new Promise<any>(resolve => {
             resolve();
         });
 
@@ -153,9 +153,9 @@ export default class Parser<I extends Input, O extends Output, C extends Content
                                    outputParser: (childParser: P) => Promise<any>): Promise<this> {
         return parserFactory(this)
             .then(childParser => {
-                let childInput: X = (this.input as any)[outputName],
-                    childOutput: Y = this.output[outputName],
-                    childContent: Z = (this.content as any)[outputName];
+                let childInput = (this.input as any)[outputName],
+                    childOutput = this.output[outputName],
+                    childContent = (this.content as any)[outputName];
 
                 return childParser.create(childInput ? () => new Promise<X>(resolve => {
                     resolve(childInput);
@@ -179,15 +179,15 @@ export default class Parser<I extends Input, O extends Output, C extends Content
                                    parserFactory: (parser: this) => Promise<P>,
                                    outputsParser: (childParser: P, index: number) => Promise<any>,
                                    ...indexes: number[]): Promise<this> {
-        let inputs: X[] = (this.input as any)[outputsName];
+        let inputs = (this.input as any)[outputsName];
 
-        let inputSize: number = 0;
+        let inputSize = 0;
 
         if (inputs && Array.isArray(inputs)) {
             inputSize = inputs.length;
         }
 
-        let indexSet: Set<number> = new Set<number>();
+        let indexSet = new Set<number>();
 
         for (let index of indexes.sort()) {
             if (index >= 0 && (inputSize == 0 || index < inputSize)) {
@@ -203,15 +203,15 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let newOutputs: Y[] = [];
 
-        let outputs: Y[] = this.output[outputsName];
+        let outputs = this.output[outputsName];
 
         if (outputs && Array.isArray(outputs)) {
             newOutputs.push(...outputs);
         }
 
-        let contents: Z[] = (this.content as any)[outputsName];
+        let contents = (this.content as any)[outputsName];
 
-        let promise: Promise<any> = new Promise<any>(resolve => {
+        let promise = new Promise<any>(resolve => {
             resolve();
         });
 

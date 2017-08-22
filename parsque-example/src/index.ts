@@ -9,7 +9,6 @@ const FILE_3_PATH = FILES_PATH + "file_3.txt";
 
 class FileInput extends Input {
     path: string;
-
     file: FileInput;
     files: FileInput[];
 }
@@ -17,7 +16,6 @@ class FileInput extends Input {
 class FileOutput extends Output {
     word: string;
     words: string[];
-
     file: FileOutput;
     files: FileOutput[];
 }
@@ -29,17 +27,19 @@ class FileContent extends Content {
 class FileParser extends Parser<FileInput, FileOutput, FileContent> {
     protected inputCreated(): Promise<any> {
         return new Promise<any>(resolve => {
-            let input: FileInput = this.input;
+            let input = this.input;
 
-            let childInput: FileInput = new FileInput();
+            let childInput = new FileInput();
             childInput.path = FILE_2_PATH;
+
             input.file = childInput;
 
             let childInputs: FileInput[] = [];
 
             for (let path of [FILE_1_PATH, FILE_2_PATH, FILE_3_PATH]) {
-                let childInput: FileInput = new FileInput();
+                let childInput = new FileInput();
                 childInput.path = path;
+
                 childInputs.push(childInput);
             }
 
@@ -63,7 +63,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
                     return;
                 }
 
-                let content: FileContent = new FileContent();
+                let content = new FileContent();
                 content.lines = data.split(/[\n\r]+/);
 
                 resolve(content);
@@ -98,7 +98,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
 
 new FileParser()
     .create(parser => new Promise<FileInput>(resolve => {
-        let input: FileInput = new FileInput();
+        let input = new FileInput();
         input.path = FILE_1_PATH;
 
         resolve(input);
