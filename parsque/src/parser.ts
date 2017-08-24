@@ -15,8 +15,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
     }
 
-    protected inputCreated(): Promise<any> {
-        return new Promise<any>(resolve => {
+    protected inputCreated(): Promise<void> {
+        return new Promise<void>(resolve => {
             resolve();
         });
     }
@@ -27,8 +27,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
     }
 
-    protected outputCreated(): Promise<any> {
-        return new Promise<any>(resolve => {
+    protected outputCreated(): Promise<void> {
+        return new Promise<void>(resolve => {
             resolve();
         });
     }
@@ -39,8 +39,8 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
     }
 
-    protected contentCreated(): Promise<any> {
-        return new Promise<any>(resolve => {
+    protected contentCreated(): Promise<void> {
+        return new Promise<void>(resolve => {
             resolve();
         });
     }

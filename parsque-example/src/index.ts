@@ -25,8 +25,8 @@ class FileContent extends Content {
 }
 
 class FileParser extends Parser<FileInput, FileOutput, FileContent> {
-    protected inputCreated(): Promise<any> {
-        return new Promise<any>(resolve => {
+    protected inputCreated(): Promise<void> {
+        return new Promise<void>(resolve => {
             let input = this.input;
 
             let childInput = new FileInput();
@@ -89,7 +89,8 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
         }), outputParser);
     }
 
-    public parseFiles(outputsParser: (childParser: this, index: number) => Promise<any>, ...indexes: number[]): Promise<this> {
+    public parseFiles(outputsParser: (childParser: this, index: number) => Promise<any>,
+                      ...indexes: number[]): Promise<this> {
         return this.parseOutputs("files", () => new Promise<FileParser>(resolve => {
             resolve(new FileParser());
         }), outputsParser, ...indexes);

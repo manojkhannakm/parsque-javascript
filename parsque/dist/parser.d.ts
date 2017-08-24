@@ -8,11 +8,11 @@ export default class Parser<I extends Input, O extends Output, C extends Content
     output: O;
     content: C;
     protected createInput(): Promise<I>;
-    protected inputCreated(): Promise<any>;
+    protected inputCreated(): Promise<void>;
     protected createOutput(): Promise<O>;
-    protected outputCreated(): Promise<any>;
+    protected outputCreated(): Promise<void>;
     protected createContent(): Promise<C>;
-    protected contentCreated(): Promise<any>;
+    protected contentCreated(): Promise<void>;
     create(inputFactory?: (parser: this) => Promise<I>, outputFactory?: (parser: this) => Promise<O>, contentFactory?: (parser: this) => Promise<C>): Promise<this>;
     parseValue(valueName: keyof O, valueParser: (parser: this) => Promise<any>): Promise<this>;
     parseValues(valuesName: keyof O, valuesParser: (parser: this, index: number) => Promise<any>, ...indexes: number[]): Promise<this>;
