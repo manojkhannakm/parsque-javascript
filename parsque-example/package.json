@@ -15,11 +15,11 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "parsque": "^1.0.6"
+    "parsque": "^1.0.7"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.8",
-    "@types/node": "^8.0.24",
+    "@types/node": "^8.0.25",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.1",
