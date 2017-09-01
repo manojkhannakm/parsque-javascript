@@ -1,6 +1,6 @@
 {
   "name": "parsque",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -24,6 +24,6 @@
     "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.1",
     "gulp-typescript": "^3.2.2",
-    "typescript": "^2.5.1"
+    "typescript": "^2.5.2"
   }
 }
