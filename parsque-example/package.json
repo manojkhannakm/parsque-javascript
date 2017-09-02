@@ -15,7 +15,7 @@
   "license": "MIT",
   "dependencies": {
     "bluebird": "^3.5.0",
-    "parsque": "^1.0.10"
+    "parsque": "^1.0.11"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.8",

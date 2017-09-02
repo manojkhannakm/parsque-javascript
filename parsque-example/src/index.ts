@@ -8,28 +8,28 @@ const FILE_2_PATH = FILES_PATH + "file_2.txt";
 const FILE_3_PATH = FILES_PATH + "file_3.txt";
 
 class FileInput extends Input {
-    path: string;
-    file: FileInput;
-    files: FileInput[];
+    public path: string;
+    public file: FileInput;
+    public files: FileInput[];
 }
 
 class FileOutput extends Output {
-    word: string;
-    words: string[];
-    file: FileOutput;
-    files: FileOutput[];
+    public word: string;
+    public words: string[];
+    public file: FileOutput;
+    public files: FileOutput[];
 }
 
 class FileContent extends Content {
-    lines: string[];
+    public lines: string[];
 }
 
 class FileParser extends Parser<FileInput, FileOutput, FileContent> {
     protected inputCreated(): Promise<void> {
         return new Promise<void>(resolve => {
-            let input = this.input;
+            let input: FileInput = this.input;
 
-            let childInput = new FileInput();
+            let childInput: FileInput = new FileInput();
             childInput.path = FILE_2_PATH;
 
             input.file = childInput;
@@ -37,7 +37,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
             let childInputs: FileInput[] = [];
 
             for (let path of [FILE_1_PATH, FILE_2_PATH, FILE_3_PATH]) {
-                let childInput = new FileInput();
+                let childInput: FileInput = new FileInput();
                 childInput.path = path;
 
                 childInputs.push(childInput);
@@ -63,7 +63,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
                     return;
                 }
 
-                let content = new FileContent();
+                let content: FileContent = new FileContent();
                 content.lines = data.split(/[\n\r]+/);
 
                 resolve(content);
@@ -99,7 +99,7 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
 
 new FileParser()
     .create(parser => new Promise<FileInput>(resolve => {
-        let input = new FileInput();
+        let input: FileInput = new FileInput();
         input.path = FILE_1_PATH;
 
         resolve(input);
