@@ -83,13 +83,13 @@ class FileParser extends Parser<FileInput, FileOutput, FileContent> {
         }), ...indexes);
     }
 
-    public parseFile(outputParser: (childParser: this) => Promise<any>): Promise<this> {
+    public parseFile(outputParser: (childParser: FileParser) => Promise<any>): Promise<this> {
         return this.parseOutput("file", () => new Promise<FileParser>(resolve => {
             resolve(new FileParser());
         }), outputParser);
     }
 
-    public parseFiles(outputsParser: (childParser: this, index: number) => Promise<any>,
+    public parseFiles(outputsParser: (childParser: FileParser, index: number) => Promise<any>,
                       ...indexes: number[]): Promise<this> {
         return this.parseOutputs("files", () => new Promise<FileParser>(resolve => {
             resolve(new FileParser());

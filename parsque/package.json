@@ -1,6 +1,6 @@
 {
   "name": "parsque",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,19 +11,19 @@
   "keywords": [],
   "author": {
     "name": "Manoj Khanna",
-    "email": "manojkhannakm@gmail.com"
+    "email": "manojmkhanna@gmail.com"
   },
   "license": "MIT",
   "dependencies": {
-    "bluebird": "^3.5.0"
+    "bluebird": "^3.5.1"
   },
   "devDependencies": {
-    "@types/bluebird": "^3.5.8",
-    "@types/node": "^8.0.26",
+    "@types/bluebird": "^3.5.18",
+    "@types/node": "^8.0.55",
     "gulp": "^3.9.1",
     "gulp-nodemon": "^2.2.1",
     "gulp-sourcemaps": "^2.6.1",
-    "gulp-typescript": "^3.2.2",
-    "typescript": "^2.5.2"
+    "gulp-typescript": "^3.2.3",
+    "typescript": "^2.6.2"
   }
 }
