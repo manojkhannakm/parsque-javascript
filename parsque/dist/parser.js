@@ -87,7 +87,7 @@ class Parser {
     }
     parseValues(valuesName, valuesParser, ...indexes) {
         let indexSet = new Set();
-        for (let index of indexes.sort()) {
+        for (let index of indexes.sort((a, b) => a - b)) {
             if (index >= 0) {
                 indexSet.add(index);
             }
@@ -138,7 +138,7 @@ class Parser {
             inputSize = inputs.length;
         }
         let indexSet = new Set();
-        for (let index of indexes.sort()) {
+        for (let index of indexes.sort((a, b) => a - b)) {
             if (index >= 0 && (inputSize == 0 || index < inputSize)) {
                 indexSet.add(index);
             }

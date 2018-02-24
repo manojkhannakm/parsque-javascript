@@ -112,7 +112,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
                        ...indexes: number[]): Promise<this> {
         let indexSet: Set<number> = new Set<number>();
 
-        for (let index of indexes.sort()) {
+        for (let index of indexes.sort((a, b) => a - b)) {
             if (index >= 0) {
                 indexSet.add(index);
             }
@@ -120,7 +120,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let newValues: any[] = [];
 
-        let values: any[] = this.output[valuesName];
+        let values: any[] = (this.output as any)[valuesName];
 
         if (values && Array.isArray(values)) {
             newValues.push(...values);
@@ -140,7 +140,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         return promise
             .then(() => {
-                this.output[valuesName] = newValues;
+                this.output[valuesName] = newValues as any;
             })
             .then(() => this);
     }
@@ -154,7 +154,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         return parserFactory(this)
             .then(childParser => {
                 let childInput: X = (this.input as any)[outputName],
-                    childOutput: Y = this.output[outputName],
+                    childOutput: Y = (this.output as any)[outputName],
                     childContent: Z = (this.content as any)[outputName];
 
                 return childParser.create(childInput ? () => new Promise<X>(resolve => {
@@ -166,7 +166,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
                 }) : undefined)
                     .then(() => outputParser(childParser))
                     .then(() => {
-                        this.output[outputName] = childParser.output;
+                        this.output[outputName] = childParser.output as any;
                     });
             })
             .then(() => this);
@@ -189,7 +189,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let indexSet: Set<number> = new Set<number>();
 
-        for (let index of indexes.sort()) {
+        for (let index of indexes.sort((a, b) => a - b)) {
             if (index >= 0 && (inputSize == 0 || index < inputSize)) {
                 indexSet.add(index);
             }
@@ -203,7 +203,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         let newOutputs: Y[] = [];
 
-        let outputs: Y[] = this.output[outputsName];
+        let outputs: Y[] = (this.output as any)[outputsName];
 
         if (outputs && Array.isArray(outputs)) {
             newOutputs.push(...outputs);
@@ -253,7 +253,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
         return promise
             .then(() => {
-                this.output[outputsName] = newOutputs;
+                this.output[outputsName] = newOutputs as any;
             })
             .then(() => this);
     }
