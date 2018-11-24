@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/input.ts"],"names":[],"mappings":";;AAAA;CACC;AADD,wBACC","file":"input.js","sourcesContent":["export default class Input {\r\n}\r\n"]}

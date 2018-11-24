@@ -1,1 +1,0 @@
-{"version":3,"sources":["../src/output.ts"],"names":[],"mappings":";;AAAA;CACC;AADD,yBACC","file":"output.js","sourcesContent":["export default class Output {\r\n}\r\n"]}
