@@ -1,7 +1,7 @@
 import * as Promise from "bluebird";
+import Content from "./content";
 import Input from "./input";
 import Output from "./output";
-import Content from "./content";
 
 export default class Parser<I extends Input, O extends Output, C extends Content> {
     public input: I;
