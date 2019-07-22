@@ -2,10 +2,10 @@ import * as Promise from "bluebird";
 import * as fs from "fs";
 import {Content, Input, Output, Parser} from "parsque";
 
-const FILES_PATH = "files/";
-const FILE_1_PATH = FILES_PATH + "file_1.txt";
-const FILE_2_PATH = FILES_PATH + "file_2.txt";
-const FILE_3_PATH = FILES_PATH + "file_3.txt";
+const FILES_PATH: string = "files/";
+const FILE_1_PATH: string = FILES_PATH + "file_1.txt";
+const FILE_2_PATH: string = FILES_PATH + "file_2.txt";
+const FILE_3_PATH: string = FILES_PATH + "file_3.txt";
 
 class FileInput extends Input {
     public path: string;

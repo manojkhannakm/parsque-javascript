@@ -158,11 +158,11 @@ export default class Parser<I extends Input, O extends Output, C extends Content
 
                 return childParser.create(childInput ? () => new Promise<X>(resolve => {
                     resolve(childInput);
-                }) : undefined, childOutput ? () => new Promise<Y>(resolve => {
+                }) : null, childOutput ? () => new Promise<Y>(resolve => {
                     resolve(childOutput);
-                }) : undefined, childContent ? () => new Promise<Z>(resolve => {
+                }) : null, childContent ? () => new Promise<Z>(resolve => {
                     resolve(childContent);
-                }) : undefined)
+                }) : null)
                     .then(() => outputParser(childParser))
                     .then(() => {
                         this.output[outputName] = childParser.output as any;
@@ -236,13 +236,13 @@ export default class Parser<I extends Input, O extends Output, C extends Content
                         childContent = contents[index];
                     }
 
-                    return childParser.create(childInput! ? () => new Promise<X>(resolve => {
+                    return childParser.create(childInput ? () => new Promise<X>(resolve => {
                         resolve(childInput);
-                    }) : undefined, childOutput! ? () => new Promise<Y>(resolve => {
+                    }) : null, childOutput ? () => new Promise<Y>(resolve => {
                         resolve(childOutput);
-                    }) : undefined, childContent! ? () => new Promise<Z>(resolve => {
+                    }) : null, childContent ? () => new Promise<Z>(resolve => {
                         resolve(childContent);
-                    }) : undefined)
+                    }) : null)
                         .then(() => outputsParser(childParser, index))
                         .then(() => {
                             newOutputs[index] = childParser.output;
