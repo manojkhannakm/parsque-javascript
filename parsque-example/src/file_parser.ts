@@ -44,9 +44,9 @@ export default class FileParser extends Parser<FileInput, FileOutput, FileConten
 
     protected createContent(): Promise<FileContent> {
         return new Promise<FileContent>((resolve, reject) => {
-            fs.readFile(this.input.path, "utf-8", (err, data) => {
-                if (err) {
-                    reject(err);
+            fs.readFile(this.input.path, "utf-8", (error, data) => {
+                if (error) {
+                    reject(error);
                     return;
                 }
 

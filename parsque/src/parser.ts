@@ -52,11 +52,9 @@ export default class Parser<I extends Input, O extends Output, C extends Content
         });
 
         if (inputFactory) {
-            promise = promise
-                .then(() => inputFactory(this));
+            promise = promise.then(() => inputFactory(this));
         } else {
-            promise = promise
-                .then(() => this.createInput());
+            promise = promise.then(() => this.createInput());
         }
 
         promise = promise
@@ -66,11 +64,9 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             .then(() => this.inputCreated());
 
         if (outputFactory) {
-            promise = promise
-                .then(() => outputFactory(this));
+            promise = promise.then(() => outputFactory(this));
         } else {
-            promise = promise
-                .then(() => this.createOutput());
+            promise = promise.then(() => this.createOutput());
         }
 
         promise = promise
@@ -80,11 +76,9 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             .then(() => this.outputCreated());
 
         if (contentFactory) {
-            promise = promise
-                .then(() => contentFactory(this));
+            promise = promise.then(() => contentFactory(this));
         } else {
-            promise = promise
-                .then(() => this.createContent());
+            promise = promise.then(() => this.createContent());
         }
 
         promise = promise
@@ -93,8 +87,7 @@ export default class Parser<I extends Input, O extends Output, C extends Content
             })
             .then(() => this.contentCreated());
 
-        return promise
-            .then(() => this);
+        return promise.then(() => this);
     }
 
     public parseValue(valueName: keyof O,
